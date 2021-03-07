@@ -1,0 +1,15 @@
+textarea {
+  height: 100%;
+  width: 100%;
+  border: 1px solid;
+  resize: none !important;
+  outline: none;
+}
+
+.ms-text-arena {
+  border: 1px solid var(--input-normal-border-color);
+  border-radius: var(--input-border-radius);
+  width: 62%;
+  padding: 8px;
+  resize: none;
+}

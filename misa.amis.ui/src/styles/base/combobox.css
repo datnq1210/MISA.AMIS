@@ -1,0 +1,41 @@
+.ms-combobox {
+  border: 1px solid var(--input-normal-border-color) !important;
+  border-radius: var(--input-border-radius) !important;
+  height: 35px !important;
+  width: 62% !important;
+}
+
+.dx-state-hover,
+.dx-state-focused {
+  border: 1px solid var(--primary) !important;
+  outline: none !important;
+}
+
+.dx-dropdowneditor-button .dx-button-content {
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: -10px !important;
+}
+
+.popup-form .dx-dropdowneditor-button {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.dx-scrollview-content .dx-state-hover,
+.dx-scrollview-content .dx-state-active,
+.dx-scrollview-content .dx-state-focused {
+  border: none !important;
+  background-color: var(--primary-bg) !important;
+  color: #000 !important;
+}
+
+.dx-scrollview-content .dx-list-item-selected {
+  background-color: var(--primary-bg) !important;
+  color: var(--primary) !important;
+}
+
+.dx-dropdownlist-popup-wrapper .dx-empty-message {
+  color: var(--primary) !;
+}

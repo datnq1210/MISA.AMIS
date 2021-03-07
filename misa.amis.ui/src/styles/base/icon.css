@@ -1,0 +1,177 @@
+.icon-apps {
+  background: url("~@/assets/icon.svg") no-repeat -3px -123px;
+  width: 18px;
+  height: 18px;
+}
+
+.icon-timesheet {
+  background: url("~@/assets/icon.svg") no-repeat 0 -72px;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-notification {
+  background: url("~@/assets/icon.svg") no-repeat -267px -2px;
+  width: 18px;
+  height: 20px;
+}
+
+.icon-check {
+  width: 16px;
+  height: 12px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -220px -54px;
+  mask-position: -220px -54px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: var(--primary);
+}
+
+.mi-chevron-down-white {
+  width: 24px;
+  height: 24px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -192px 0;
+  mask-position: -192px 0;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: #fff;
+}
+
+.mi-chevron-small {
+  width: 8px;
+  height: 5px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -104px -58px;
+  mask-position: -104px -58px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: #000;
+}
+
+.icon-add {
+  width: 16px;
+  height: 16px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -292px -76px;
+  mask-position: -292px -76px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: #fff;
+}
+
+.icon-filter {
+  width: 16px;
+  height: 18px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -244px -51px;
+  mask-position: 244px -51px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: #737888;
+}
+
+.icon-info {
+  width: 20px;
+  height: 20px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -242px -74px;
+  mask-position: -242px -74px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: var(--primary);
+}
+
+.icon-close-popup {
+  width: 12px;
+  height: 12px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -30px -54px;
+  mask-position: -30px -54px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: #666;
+}
+
+.mx-icon-calendar {
+  width: 20px !important;
+  height: 22px !important;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -50px -25px;
+  mask-position: -50px -25px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  border-radius: 4px;
+  background-color: #666 !important;
+}
+
+.dx-button-content .dx-dropdowneditor-icon {
+  width: 8px !important;
+  height: 6px !important;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -104px -58px;
+  mask-position: -104px -58px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: #666 !important;
+}
+
+.icon-adjust-column {
+  width: 20px;
+  height: 20px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -242px -26px;
+  mask-position: -242px -26px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: #666 !important;
+  margin: 12px;
+  cursor: pointer;
+}
+
+.icon-scale {
+  width: 18px;
+  height: 12px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -315px -78px;
+  mask-position: -315px -78px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: #666 !important;
+  margin: 12px;
+}
+
+.icon-next-page {
+  width: 7px;
+  height: 14px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -249px -5px;
+  mask-position: -249px -5px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: #afb3c1 !important;
+}
+
+.icon-prev-page {
+  width: 7px;
+  height: 14px;
+  -webkit-mask-image: url("~@/assets/icon.svg");
+  mask-image: url("~@/assets/icon.svg");
+  -webkit-mask-position: -224px -5px;
+  mask-position: -224px -5px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background-color: #afb3c1 !important;
+}

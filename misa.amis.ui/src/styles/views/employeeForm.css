@@ -1,0 +1,13 @@
+.employee-form .btn-cancel {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.employee-form .btn-cancel:hover,
+.employee-form .btn-cancel:focus {
+  background-color: var(--button-secondary-hover-bg-color);
+}
+
+.employee-form .employee-list{
+  height: 400px;
+}

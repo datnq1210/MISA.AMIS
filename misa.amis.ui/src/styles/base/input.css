@@ -1,0 +1,23 @@
+.ms-input {
+  height: 35px;
+  width: 100%;
+  outline: none;
+  border-radius: var(--input-border-radius);
+}
+
+.mx-input{
+    border: 1px solid var(--input-normal-border-color) !important;
+}
+
+.mx-input:hover, .mx-input:focus {
+    border-color: var(--primary) !important;
+}
+
+.input-border-hover:hover {
+  border: 1px solid var(--input-hover-border-color);
+}
+
+.input-border-active:focus-within {
+  border: 1px solid var(--input-active-border-color);
+}
+

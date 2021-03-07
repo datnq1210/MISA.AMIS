@@ -1,0 +1,25 @@
+.register-overtime-form .form-bottom .btn-cancel {
+  width: 80px;
+  border: 1px solid var(--input-normal-border-color);
+  background-color: var(--button-primary-color);
+  color: var(--black);
+}
+
+.register-overtime-form .form-bottom .btn-cancel:hover,
+.register-overtime-form .form-bottom .btn-cancel:focus {
+  background-color: var(--button-secondary-hover-bg-color);
+}
+
+.register-overtime-form .form-bottom .btn-save {
+  width: 80px;
+  background-color: var(--button-primary-normal-bg-color);
+  color: var(--white);
+}
+
+.btn-add-employee{
+  color: #3c4ada;
+}
+
+.btn-add-employee .icon-add{
+  background: #3c4ada !important;
+}

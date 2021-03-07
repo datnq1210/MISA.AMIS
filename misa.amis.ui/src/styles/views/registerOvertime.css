@@ -1,0 +1,44 @@
+.register-overtime {
+  height: 100%;
+}
+.register-overtime-content{
+  display: flex;
+  height: calc(100% - 52px);
+}
+
+.btn-add {
+  background-color: var(--primary);
+  height: 36px;
+  border-radius: var(--button-border-radius);
+  padding: 0 12px 0 6px;
+  font-size: 14px;
+  color: #fff;
+}
+
+.btn-add:hover {
+  background-color: var(--button-primary-hover-bg-color);
+}
+
+.btn-add:focus {
+  background-color: var(--button-primary-hover-bg-color);
+}
+
+.btn-filter {
+  width: 36px;
+  height: 36px;
+  background-color: #fff;
+  padding: 9px 10px 9px 10px;
+  border-radius: var(--button-border-radius);
+}
+.btn-filter:hover {
+  border: 1px solid var(--input-hover-border-color);
+  background-color: #ffede2;
+}
+
+/* .dx-dropdowneditor.dx-dropdowneditor-field-clickable{
+  border: none !important;
+  background: none !important;
+  width: 100px !important;
+  font-size: 15px !important;
+  font-weight: bold !important;
+} */
