@@ -1,11 +1,9 @@
 <template>
   <div class="register-overtime">
-    <div class="ms-flex mb-4">
+    <div v-if="true" class="register-overtime-header">
       <span class="heading-2">Đơn làm thêm giờ</span>
       <div class="status ms-flex ml-13">
         <div style="color: grey; font-size: 14px" class="mr-2">Trạng thái:</div>
-        <!-- <div class="subheader mr-2">Từ chối</div>
-            <div class="mi-chevron-small"></div> -->
         <ms-select
           :id="'filterState'"
           :data="states"
@@ -14,7 +12,10 @@
       </div>
       <v-spacer></v-spacer>
       <ms-search-box :isIcon="true" style="width: 240px" class="mr-2" />
-      <button class="btn-add ms-flex mr-2" @click="openFormRegisterOvertime">
+      <button
+        class="btn-add ms-flex mr-2 pl-3 pr-4"
+        @click="openFormRegisterOvertime"
+      >
         <div class="icon-add mr-1 my-2 ml-2"></div>
         <div>Thêm</div>
       </button>
@@ -22,12 +23,14 @@
         <div class="icon-filter"></div>
       </button>
     </div>
+    <div v-if="false" class="register-overtime-header">Đã chọn 1</div>
     <div class="register-overtime-content">
       <ms-grid
         :data="registerOvertime"
         :columns="columns"
         :adjustColumn="true"
-        :minWidth="150"
+        :minWidth="100"
+        @updateHeader="updateHeader"
       />
       <ms-filter v-show="isShowFilterBox" @closeFilterBox="closeFilterBox" />
     </div>
@@ -44,7 +47,7 @@
 import "devextreme/dist/css/dx.common.css";
 import "devextreme/dist/css/dx.light.css";
 
-import registerOvertime from "@/service/registerOvertime.service.js"
+import registerOvertime from "@/service/registerOvertime.service.js";
 
 export default {
   name: "register-overtime",
@@ -55,10 +58,11 @@ export default {
       isShowFilterBox: false,
       registerOvertime: registerOvertime.getRegisterOvertime(),
       columns: [
-        { datafield: "approvedBy", caption: "Người duyệt" },
-        { datafield: "dateCreate", caption: "Ngày lập" },
-        { datafield: "dateWorkEnd", caption: "Thời gian" },
-        { datafield: "status", caption: "Trạng thái" },
+        { datafield: "applicants", caption: "Người nộp đơn", visible: true },
+        { datafield: "approvedBy", caption: "Người duyệt", visible: true },
+        { datafield: "dateCreate", caption: "Ngày lập", visible: true },
+        { datafield: "dateWorkEnd", caption: "Thời gian", visible: true },
+        { datafield: "status", caption: "Trạng thái", visible: true },
       ],
       states: [
         { text: "Tất cả" },
@@ -69,6 +73,9 @@ export default {
     };
   },
   methods: {
+    updateHeader(val) {
+      this.columns = { ...val };
+    },
     openFormRegisterOvertime() {
       this.isShowFormRegisterOvertime = true;
     },

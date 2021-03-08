@@ -10,41 +10,42 @@
       <ms-search-box></ms-search-box>
     </div>
     <div class="list-group pa-2">
-      <div v-for="(item, index) in headers" :key="index" class="ms-flex pl-2">
-        <DxCheckBox :text="item.text" width="100%" />
+      <div v-for="(item, index) in headersX" :key="index" class="ms-flex pl-2">
+        <DxCheckBox :text="item.caption" width="100%" v-model="item.visible" />
         <div class="icon-scale"></div>
       </div>
     </div>
     <div class="adjust-column-bottom py-3">
       <button class="ms-button ms-button-secondary px-3 mr-4">Mặc định</button>
-      <button class="ms-button ms-button-primary px-7">Lưu</button>
+      <button class="ms-button ms-button-primary px-7" @click="handleSave">Lưu</button>
     </div>
   </div>
 </template>
 
 <script>
 import { DxCheckBox } from "devextreme-vue/check-box";
-// import { DxPopover } from 'devextreme-vue/popover';
 export default {
   components: {
-    // DxPopover
     DxCheckBox,
   },
   data() {
     return {
-      headers: [
-        { text: "Người nộp đơn", typeOfDate: true, typeOfString: false },
-        { text: "Người duyệt", typeOfDate: false, typeOfString: true },
-        { text: "Ngày lập", typeOfDate: true, typeOfString: false },
-        { text: "Trạng thái", typeOfDate: false, typeOfString: true },
-      ],
+      headersX: {...this.headers}
     };
+  },
+  props: {
+    headers: {
+      type: Array,
+      default: () => []
+    }
   },
   methods: {
     close() {
       this.$emit("closeAdjustColumn");
     },
-   
+   handleSave() {
+     this.$emit("onSaveFilter", this.headersX)
+   }
   },
   
 };

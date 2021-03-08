@@ -1,7 +1,15 @@
-.mx-datepicker{
-    width: 62% !important;
+.mx-datepicker {
+  width: 62% !important;
 }
-.mx-calendar-content .cell.active{
-    background-color: var(--primary) !important;
-    color: #fff;
+.mx-calendar-content .cell.active {
+  background-color: var(--primary) !important;
+  color: #fff;
+}
+
+.mx-calendar-content .cell.active {
+  background-color: var(--date-picker-active-bg) !important;
+}
+
+.mx-calendar-content .cell:hover {
+  background-color: var(--date-picker-hover-bg) !important;
 }

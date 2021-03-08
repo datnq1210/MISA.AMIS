@@ -1,42 +1,62 @@
 <template>
   <div class="grid">
-    <DxDataGrid
-      :data-source="data"
-      :onContentReady="onContentReady"
-      :allow-column-reordering="true"
-      :allow-column-resizing="true"
-      :noDataText="'Không có dữ liệu'"
-      key-expr="ID"
-      height="calc(100% - 60px)"
-      style="border: 1px solid #e0e0e0"
-      :hoverStateEnabled="true"
-    >
-      <DxSelection mode="multiple" />
-      <DxScrollView :use-native="true" direction="both" />
+    <div class="grid-table">
+      <DxDataGrid
+        :data-source="data"
+        :onContentReady="onContentReady"
+        :allow-column-reordering="true"
+        :allow-column-resizing="true"
+        :noDataText="'Không có dữ liệu'"
+        key-expr="ID"
+        style="border: 1px solid #e0e0e0"
+        :height="'100%'"
+        :hoverStateEnabled="true"
+      >
+        <DxSelection
+          mode="multiple"
+          :select-all-mode="page"
+          :show-check-boxes-mode="always"
+        />
 
-      <DxColumn
-        v-show="adjustColumn"
-        id="adjust-column"
-        header-cell-template="adjust-column"
-        width="50"
-      />
-      <template #adjust-column>
-        <div
+        <DxPaging :enabled="false" />
+
+        <DxColumn
           v-show="adjustColumn"
-          id="adjust-column-btn"
-          class="icon-adjust-column"
-          @click="isShowAdjustColumn = !isShowAdjustColumn"
-        ></div>
-      </template>
+          id="adjust-column"
+          header-cell-template="adjust-column"
+          width="50"
+        />
+        <template #adjust-column>
+          <div
+            v-show="adjustColumn"
+            id="adjust-column-btn"
+            class="icon-adjust-column"
+            @click="isShowAdjustColumn = !isShowAdjustColumn"
+          ></div>
+        </template>
 
-      <DxColumn
-        v-for="(column, index) in columns"
-        :data-field="column.datafield"
-        :caption="column.caption"
-        :key="index"
-        :min-width="minWidth"
-      ></DxColumn>
-    </DxDataGrid>
+        <DxColumn
+          v-for="(column, index) in columns"
+          :data-field="column.datafield"
+          :caption="column.caption"
+          :key="index"
+          :min-width="minWidth"
+          :visible="column.visible"
+        />
+
+        <DxColumn caption="" :width="120" cell-template="onHoverRow" />
+        <template #onHoverRow="{}">
+          <div class="onHoverRow ms-flex">
+            <button class="btn-edit mr-4">
+              <div class="icon-edit"></div>
+            </button>
+            <button class="btn-delete">
+              <div class="icon-delete"></div>
+            </button>
+          </div>
+        </template>
+      </DxDataGrid>
+    </div>
     <div class="grid-bottom">
       <div>
         Tổng số bản ghi: <b>{{ recordTotal }}</b>
@@ -67,6 +87,8 @@
       <AdjustColumn
         v-show="isShowAdjustColumn"
         @closeAdjustColumn="closeAdjustColumn"
+        :headers="columns"
+        @onSaveFilter="handleSaveFilter"
       />
     </transition>
   </div>
@@ -76,8 +98,13 @@
 import "devextreme/dist/css/dx.common.css";
 import "devextreme/dist/css/dx.light.css";
 
-import { DxDataGrid, DxColumn, DxSelection } from "devextreme-vue/data-grid";
-import { DxScrollView } from "devextreme-vue/scroll-view";
+import {
+  DxDataGrid,
+  DxColumn,
+  DxSelection,
+  DxPaging,
+  // DxPager,
+} from "devextreme-vue/data-grid";
 import AdjustColumn from "./AdjustColumn";
 export default {
   name: "ms-grid",
@@ -94,10 +121,10 @@ export default {
       type: Boolean,
       default: true,
     },
-    minWidth:{
+    minWidth: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   computed: {
     recordTotal() {
@@ -117,9 +144,13 @@ export default {
     DxColumn,
     DxSelection,
     AdjustColumn,
-    DxScrollView,
+    DxPaging,
+    // DxPager,
   },
   methods: {
+    handleSaveFilter(val) {
+      this.$emit("updateHeader", val);
+    },
     onContentReady(e) {
       e.component.columnOption("command:select", "visibleIndex", 0);
     },
@@ -157,6 +188,12 @@ export default {
   position: relative;
 }
 
+.grid-table {
+  width: 100%;
+  height: calc(100% - 60px);
+  overflow: auto;
+}
+
 .grid-bottom {
   width: 100%;
   height: 60px;
@@ -192,7 +229,7 @@ export default {
 
 .dx-datagrid-content .dx-state-hover,
 .dx-datagrid-content .dx-state-focused {
-  border: none !important;
+  border: 1px solid transparent !important;
 }
 
 .dx-datagrid-content .dx-datagrid-table .dx-row > td:first-child,
@@ -204,7 +241,7 @@ export default {
 }
 
 .dx-datagrid-headers {
-  border: none !important;
+  border: 1px solid transparent !important;
 }
 
 .dx-datagrid-rowsview
@@ -231,9 +268,12 @@ export default {
 }
 
 .dx-header-row > td {
-  height: 48px !important;
-  line-height: 48px !important;
-  font-weight: 600;
+  height: 45px !important;
+  line-height: 45px !important;
+  font-weight: 700;
+}
+.dx-header-row {
+  border: 1px solid transparent !important;
 }
 
 #dx-col-1 {
@@ -249,9 +289,9 @@ export default {
   background-color: #ffede2 !important;
 }
 
-.dx-datagrid-rowsview .dx-selection {
-  background-color: #fff4e5 !important;
-}
+/* .dx-datagrid-rowsview .dx-selection {
+    background-color: #fff4e5 !important;
+  } */
 
 .dx-freespace-row.dx-column-lines {
   display: none;
@@ -259,18 +299,60 @@ export default {
 
 .dx-header-row.dx-state-hover {
   background: #fff !important;
+  border: 1px solid transparent;
 }
 
 .dx-scrollable-content .dx-state-hover {
   border: none !important;
 }
 
-.dx-scrollbar-horizontal.dx-scrollbar-hoverable.dx-state-hover{
+.onHoverRow {
+  visibility: hidden;
+}
+
+.dx-scrollable-content .dx-state-hover .onHoverRow {
+  visibility: visible;
+}
+
+.dx-scrollbar-horizontal.dx-scrollbar-hoverable.dx-state-hover {
   border: none !important;
 }
 
-.dx-scrollbar-vertical.dx-scrollbar-hoverable.dx-state-hover{
+.dx-scrollbar-vertical.dx-scrollbar-hoverable.dx-state-hover {
   border: none !important;
+}
+
+.dx-datagrid-nodata::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%, -120%);
+  transform: translate(-50%, -120%);
+  width: 80px;
+  height: 80px;
+  background: url("../../assets/empty_state.svg") no-repeat -13px -270px;
+  width: 54px;
+  height: 68px;
+}
+.dx-datagrid-rowsview .dx-selection,
+.dx-datagrid-rowsview .dx-selection td {
+  background: #fff4e5 !important;
+}
+
+.dx-widget {
+  font-family: "Roboto" !important;
+}
+
+.btn-edit,
+.btn-delete {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
 }
 
 .pagingOption {

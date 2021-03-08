@@ -64,16 +64,29 @@
   background-color: #fff;
 }
 
+
+.icon-edit{
+  width: 18px;
+  height: 20px;
+  background-image: url("~@/assets/icon.svg");
+  background-position: -291px -26px;
+  background-repeat: no-repeat;
+}
+
+.icon-delete{
+  width: 18px;
+  height: 20px;
+  background-image: url("~@/assets/icon.svg");
+  background-position:-170px -26px;
+  background-repeat: no-repeat;
+}
+
 .icon-filter {
   width: 16px;
   height: 18px;
-  -webkit-mask-image: url("~@/assets/icon.svg");
-  mask-image: url("~@/assets/icon.svg");
-  -webkit-mask-position: -244px -51px;
-  mask-position: 244px -51px;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  background-color: #737888;
+  background-image: url("~@/assets/icon.svg");
+  background-position: -244px -51px;
+  background-repeat: no-repeat;
 }
 
 .icon-info {
