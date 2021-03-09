@@ -10,6 +10,7 @@
         :height="'100%'"
         :hoverStateEnabled="true"
         @row-click="getSelectedRow"
+        @selection-changed="onSelectionChanged"
         style="border: 1px solid #e0e0e0"
       >
         <DxSelection
@@ -184,6 +185,18 @@ export default {
     },
     onContentReady(e) {
       e.component.columnOption("command:select", "visibleIndex", 0);
+    },
+    onSelectionChanged(e) {
+      const currentSelectedRowKeys = e.currentSelectedRowKeys;
+      const currentDeselectedRowKeys = e.currentDeselectedRowKeys;
+      const allSelectedRowKeys = e.selectedRowKeys;
+      const allSelectedRowsData = e.selectedRowsData;
+      console.log(currentSelectedRowKeys);
+      console.log(currentDeselectedRowKeys);
+      console.log(allSelectedRowKeys.length);
+      console.log(allSelectedRowsData);
+      if (allSelectedRowKeys.length > 0) this.$emit("onCheckRow", true, allSelectedRowKeys.length);
+      else if (allSelectedRowKeys.length <= 0) this.$emit("onCheckRow", false);
     },
     closeAdjustColumn() {
       this.isShowAdjustColumn = false;

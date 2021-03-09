@@ -1,6 +1,6 @@
 <template>
   <div class="register-overtime">
-    <div v-if="true" class="register-overtime-header">
+    <div v-if="!isCheckedRow" class="register-overtime-header">
       <span class="heading-2">Đơn làm thêm giờ</span>
       <div class="status ms-flex ml-13">
         <div style="color: grey; font-size: 14px" class="mr-2">Trạng thái:</div>
@@ -23,8 +23,8 @@
         <div class="icon-filter"></div>
       </button>
     </div>
-    <div v-if="false" class="register-overtime-header">
-      <span>Đã chọn <b>1</b></span>
+    <div v-if="isCheckedRow" class="register-overtime-header">
+      <span>Đã chọn <b>{{ rowCheckCount }}</b></span>
       <button class="btn-untick ms-button ml-4">Bỏ chọn</button>
       <button class="btn-delete-mutilple ms-button ms-flex ml-4 pl-3 pr-4">
         <div class="icon-delete mr-1"></div>
@@ -42,6 +42,7 @@
         @updateHeader="updateHeader"
         @deleteOnClick="deleteForm"
         @editOnClick="getSelectedForm"
+        @onCheckRow="onCheckRow"
       />
       <ms-filter v-show="isShowFilterBox" @closeFilterBox="closeFilterBox" />
     </div>
@@ -51,7 +52,6 @@
         :selectedForm="selectedForm"
         :isEditing="isEditing"
         :isAdding="isAdding"
-        @editOnClick="editForm"
         @closeFormRegisterOvertime="closeFormRegisterOvertime"
       />
     </transition>
@@ -71,6 +71,8 @@ export default {
     return {
       isShowFormRegisterOvertime: false,
       isShowFilterBox: false,
+      isCheckedRow: false,
+      rowCheckCount: 0,
       registerOvertime: [],
       selectedForm: {
         Id: "",
@@ -142,6 +144,10 @@ export default {
       this.isEditing = true;
       this.selectedForm = obj;
       this.isShowFormRegisterOvertime = true;
+    },
+    onCheckRow(isCheck, count){
+      this.isCheckedRow = isCheck;
+      this.rowCheckCount = count;
     },
     closeFormRegisterOvertime() {
       this.isShowFormRegisterOvertime = false;
