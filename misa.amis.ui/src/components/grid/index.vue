@@ -7,15 +7,15 @@
         :allow-column-reordering="true"
         :allow-column-resizing="true"
         :noDataText="'Không có dữ liệu'"
-        key-expr="ID"
-        style="border: 1px solid #e0e0e0"
         :height="'100%'"
         :hoverStateEnabled="true"
+        @row-click="getSelectedRow"
+        style="border: 1px solid #e0e0e0"
       >
         <DxSelection
           mode="multiple"
-          :select-all-mode="page"
-          :show-check-boxes-mode="always"
+          select-all-mode="page"
+          show-check-boxes-mode="always"
         />
 
         <DxPaging :enabled="false" />
@@ -24,6 +24,7 @@
           v-show="adjustColumn"
           id="adjust-column"
           header-cell-template="adjust-column"
+          :allow-sorting="false"
           width="50"
         />
         <template #adjust-column>
@@ -36,21 +37,27 @@
         </template>
 
         <DxColumn
-          v-for="(column, index) in columns"
-          :data-field="column.datafield"
-          :caption="column.caption"
-          :key="index"
+          v-for="item in columns"
+          :data-field="item.datafield"
+          :caption="item.caption"
+          :key="item.Id"
           :min-width="minWidth"
-          :visible="column.visible"
+          :visible="item.visible"
+          :allow-sorting="false"
         />
 
-        <DxColumn caption="" :width="120" cell-template="onHoverRow" />
+        <DxColumn
+          caption=""
+          :width="120"
+          cell-template="onHoverRow"
+          :allow-sorting="false"
+        />
         <template #onHoverRow="{}">
           <div class="onHoverRow ms-flex">
-            <button class="btn-edit mr-4">
+            <button class="btn-edit mr-4" @click="editRow">
               <div class="icon-edit"></div>
             </button>
-            <button class="btn-delete">
+            <button class="btn-delete" @click="deleteRow">
               <div class="icon-delete"></div>
             </button>
           </div>
@@ -87,7 +94,7 @@
       <AdjustColumn
         v-show="isShowAdjustColumn"
         @closeAdjustColumn="closeAdjustColumn"
-        :headers="columns"
+        :headers="headers"
         @onSaveFilter="handleSaveFilter"
       />
     </transition>
@@ -97,17 +104,22 @@
 <script>
 import "devextreme/dist/css/dx.common.css";
 import "devextreme/dist/css/dx.light.css";
-
 import {
   DxDataGrid,
   DxColumn,
   DxSelection,
   DxPaging,
-  // DxPager,
 } from "devextreme-vue/data-grid";
 import AdjustColumn from "./AdjustColumn";
 export default {
   name: "ms-grid",
+  components: {
+    DxDataGrid,
+    DxColumn,
+    DxSelection,
+    AdjustColumn,
+    DxPaging,
+  },
   props: {
     data: {
       type: Array,
@@ -132,24 +144,43 @@ export default {
       if (count < 10 && count > 0) return "0" + count;
       return count;
     },
+    headers() {
+      return this.columns;
+    },
   },
   data() {
     return {
       isShowAdjustColumn: false,
+      defaultVisible: false,
+      selectedRow: {},
+      isEditing: false,
+      isDeleting: false,
       pages: [{ text: "15" }, { text: "25" }, { text: "50" }, { text: "100" }],
     };
   },
-  components: {
-    DxDataGrid,
-    DxColumn,
-    DxSelection,
-    AdjustColumn,
-    DxPaging,
-    // DxPager,
-  },
   methods: {
+    getSelectedRow(e) {
+      this.selectedRow = e.data;
+      if (this.isDeleting) {
+        this.$emit("deleteOnClick", this.selectedRow.Id);
+        this.isDeleting = false;
+      }
+      if (this.isEditing) {
+        this.$emit("editOnClick", this.selectedRow);
+        this.isEditing = false;
+      }
+    },
     handleSaveFilter(val) {
       this.$emit("updateHeader", val);
+    },
+    toggleDefault() {
+      this.defaultVisible = !this.defaultVisible;
+    },
+    deleteRow() {
+      this.isDeleting = true;
+    },
+    editRow() {
+      this.isEditing = true;
     },
     onContentReady(e) {
       e.component.columnOption("command:select", "visibleIndex", 0);
@@ -191,7 +222,6 @@ export default {
 .grid-table {
   width: 100%;
   height: calc(100% - 60px);
-  overflow: auto;
 }
 
 .grid-bottom {
@@ -342,6 +372,11 @@ export default {
 
 .dx-widget {
   font-family: "Roboto" !important;
+}
+
+.dx-tooltip-wrapper .dx-overlay-content {
+  background-color: #000;
+  color: #fff;
 }
 
 .btn-edit,

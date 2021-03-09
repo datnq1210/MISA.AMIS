@@ -14,7 +14,7 @@
       <ms-search-box :isIcon="true" style="width: 240px" class="mr-2" />
       <button
         class="btn-add ms-flex mr-2 pl-3 pr-4"
-        @click="openFormRegisterOvertime"
+        @click="addForm"
       >
         <div class="icon-add mr-1 my-2 ml-2"></div>
         <div>Thêm</div>
@@ -30,13 +30,20 @@
         :columns="columns"
         :adjustColumn="true"
         :minWidth="100"
+        :deleteData="deleteForm"
         @updateHeader="updateHeader"
+        @deleteOnClick="deleteForm"
+        @editOnClick="getSelectedForm"
       />
       <ms-filter v-show="isShowFilterBox" @closeFilterBox="closeFilterBox" />
     </div>
     <transition name="fade" appear>
       <register-overtime-form
         v-if="isShowFormRegisterOvertime"
+        :selectedForm="selectedForm"
+        :isEditing="isEditing"
+        :isAdding="isAdding"
+        @editOnClick="editForm"
         @closeFormRegisterOvertime="closeFormRegisterOvertime"
       />
     </transition>
@@ -56,13 +63,46 @@ export default {
     return {
       isShowFormRegisterOvertime: false,
       isShowFilterBox: false,
-      registerOvertime: registerOvertime.getRegisterOvertime(),
+      registerOvertime: [],
+      selectedForm: {
+        Id: "",
+        applicant: "",
+        dateCreate: "",
+        dateWorkStart: "",
+        dateWorkEnd: "",
+        reasonOvertime: "",
+        approvedBy: "",
+        note: "",
+        status: "",
+      },
+      isAdding: false,
+      isEditing: false,
       columns: [
-        { datafield: "applicants", caption: "Người nộp đơn", visible: true },
-        { datafield: "approvedBy", caption: "Người duyệt", visible: true },
-        { datafield: "dateCreate", caption: "Ngày lập", visible: true },
-        { datafield: "dateWorkEnd", caption: "Thời gian", visible: true },
-        { datafield: "status", caption: "Trạng thái", visible: true },
+        {
+          ID: "1",
+          datafield: "applicant",
+          caption: "Người nộp đơn",
+          visible: true,
+        },
+        {
+          ID: "2",
+          datafield: "approvedBy",
+          caption: "Người duyệt",
+          visible: true,
+        },
+        {
+          ID: "3",
+          datafield: "dateCreate",
+          caption: "Ngày lập",
+          visible: true,
+        },
+        {
+          ID: "4",
+          datafield: "dateWorkEnd",
+          caption: "Thời gian",
+          visible: true,
+        },
+        { ID: "5", datafield: "status", caption: "Trạng thái", visible: true },
       ],
       states: [
         { text: "Tất cả" },
@@ -79,6 +119,22 @@ export default {
     openFormRegisterOvertime() {
       this.isShowFormRegisterOvertime = true;
     },
+    addForm(){
+      this.isAdding = true;
+      this.isEditing = false;
+      this.isShowFormRegisterOvertime = true;
+    },
+    deleteForm(id) {
+      registerOvertime.removeRegisterOvertime(id);
+      this.loadData();
+    },
+    getSelectedForm(obj) {
+      console.log("editing");
+      this.isAdding = false;
+      this.isEditing = true;
+      this.selectedForm = obj;
+      this.isShowFormRegisterOvertime = true;
+    },
     closeFormRegisterOvertime() {
       this.isShowFormRegisterOvertime = false;
     },
@@ -88,6 +144,12 @@ export default {
     closeFilterBox() {
       this.isShowFilterBox = false;
     },
+    loadData() {
+      this.registerOvertime = registerOvertime.getRegisterOvertime();
+    },
+  },
+  created() {
+    this.loadData();
   },
 };
 </script>

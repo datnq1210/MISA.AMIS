@@ -62,7 +62,7 @@ export default {
     return {
       checkboxValue: false,
       noDataMsg: "Không có dữ liệu!",
-      conditions: ["Bằng", "Không bằng", "Chứa", "Không chứa"],
+      conditions: ["Bằng", "Khác", "Trống", "Không trống"],
       lang: {
         formatLocale: {
           firstDayOfWeek: 1,

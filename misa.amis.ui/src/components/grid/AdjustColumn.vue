@@ -10,44 +10,58 @@
       <ms-search-box></ms-search-box>
     </div>
     <div class="list-group pa-2">
-      <div v-for="(item, index) in headersX" :key="index" class="ms-flex pl-2">
-        <DxCheckBox :text="item.caption" width="100%" v-model="item.visible" />
-        <div class="icon-scale"></div>
-      </div>
+      <draggable v-model="headersX">
+        <div v-for="item in headersX" :key="item.ID" class="ms-flex pl-2">
+          <DxCheckBox
+            width="100%"
+            :text="item.caption"
+            v-model="item.visible"
+          />
+          <div class="icon-scale"></div>
+        </div>
+      </draggable>
     </div>
     <div class="adjust-column-bottom py-3">
       <button class="ms-button ms-button-secondary px-3 mr-4">Mặc định</button>
-      <button class="ms-button ms-button-primary px-7" @click="handleSave">Lưu</button>
+      <button class="ms-button ms-button-primary px-7" @click="handleSave">
+        Lưu
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import { DxCheckBox } from "devextreme-vue/check-box";
+import draggable from "vuedraggable";
+
 export default {
   components: {
     DxCheckBox,
+    draggable,
   },
   data() {
     return {
-      headersX: {...this.headers}
+      headersX: this.headers,
     };
   },
+  computed: {},
   props: {
     headers: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   methods: {
     close() {
       this.$emit("closeAdjustColumn");
     },
-   handleSave() {
-     this.$emit("onSaveFilter", this.headersX)
-   }
-  },
-  
+    handleSave() {
+      this.$emit("onSaveFilter", this.headersX);
+    },
+    handleChechk(){
+      this.headersX = this.headers;
+    }
+  }
 };
 </script>
 

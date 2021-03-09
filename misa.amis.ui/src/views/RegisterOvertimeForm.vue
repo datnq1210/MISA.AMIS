@@ -23,22 +23,21 @@
                 :items="applicants"
                 :search-enabled="true"
                 placeholder=""
-                v-model="newForm.applicants"
+                v-model="newForm.applicant"
                 :noDataText="noDataMsg"
                 class="ms-combobox"
-              />
+              >
+                <DxValidator>
+                  <DxRequiredRule message="Address is required" />
+                </DxValidator>
+              </DxSelectBox>
             </div>
 
             <!-- Đơn vị công tác -->
             <div class="ms-row">
               <label>Đơn vị công tác</label>
               <div class="ms-combobox ms-flex ms-button-disable">
-                <input
-                  type="text"
-                  id="applicants"
-                  class="ms-input px-2"
-                  disabled
-                />
+                <input type="text" class="ms-input px-2" disabled />
               </div>
             </div>
 
@@ -61,7 +60,7 @@
               <date-picker
                 :lang="lang"
                 v-model="newForm.dateWorkStart"
-                value-type="date"
+                value-type="DD/MM/YYYY HH::mm"
                 type="datetime"
                 placeholder="Làm thêm từ"
                 format="YYYY-MM-DD HH:mm"
@@ -81,7 +80,7 @@
               <label>Làm thêm đến <span class="label-require">*</span></label>
               <date-picker
                 :lang="lang"
-                value-type="date"
+                value-type="DD/MM/YYYY HH::mm"
                 placeholder="Làm thêm đến"
                 format="YYYY-MM-DD HH:mm"
                 v-model="newForm.dateWorkEnd"
@@ -117,7 +116,7 @@
             <div class="ms-row">
               <label>Người duyệt <span class="label-require">*</span></label>
               <DxSelectBox
-                :items="applicants"
+                :items="approvedBy"
                 :search-enabled="true"
                 placeholder=""
                 class="ms-combobox"
@@ -160,6 +159,7 @@
           </div>
           <button
             class="ms-button btn-add-employee ms-flex pl-3 pr-4"
+            :use-submit-behavior="true"
             @click="openFormEmployee"
           >
             <div class="icon-add mr-1"></div>
@@ -192,31 +192,53 @@
 
 <script>
 import DxSelectBox from "devextreme-vue/select-box";
+import { DxValidator, DxRequiredRule } from "devextreme-vue/validator";
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/locale/vi";
 import "vue2-datepicker/index.css";
 
-const applicants = ["Nguyễn Quốc Đạt", "Tạ Long Khánh", "Nguyễn Thành Long"];
+import registerOvertime from "@/service/registerOvertime.service.js";
+import employService from "@/service/employs.service.js";
+import employeeService from "@/service/employees.service.js";
+
+var employs = employService.getEmploy();
+var employees = employeeService.getEmployees();
 
 export default {
   name: "register-overtime-form",
+  components: {
+    DxSelectBox,
+    DatePicker,
+    DxValidator,
+    DxRequiredRule,
+  },
   computed: {
     noDataMsg() {
       return "Không có dữ liệu!";
     },
+    approvedBy() {
+      return employs.map(function (employs) {
+        return employs.name;
+      });
+    },
+    applicants() {
+      return employees.map(function (employees) {
+        return employees.name;
+      });
+    },
   },
   data() {
     return {
-      applicants: applicants,
       newForm: {
-        applicants: null,
-        dateCreate: null,
-        dateWorkStart: null,
-        dateWorkEnd: null,
-        reasonOvertime: null,
-        approvedBy: null,
-        note: null,
-        status: null,
+        Id: "",
+        applicant: "",
+        dateCreate: "",
+        dateWorkStart: "",
+        dateWorkEnd: "",
+        reasonOvertime: "",
+        approvedBy: "",
+        note: "",
+        status: "",
       },
       states: ["Chờ duyệt", "Đã duyệt", "Từ chối"],
       lang: {
@@ -230,9 +252,29 @@ export default {
       showTimePanel: false,
     };
   },
-  components: {
-    DxSelectBox,
-    DatePicker,
+  props: {
+    selectedForm: {
+      type: Object,
+      default: () => ({
+        Id: null,
+        applicant: null,
+        dateCreate: null,
+        dateWorkStart: null,
+        dateWorkEnd: null,
+        reasonOvertime: null,
+        approvedBy: null,
+        note: null,
+        status: null,
+      }),
+    },
+    isEditing: {
+      type: Boolean,
+      default: false,
+    },
+    isAdding: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     closeFormRegisterOvertime() {
@@ -245,14 +287,27 @@ export default {
       this.isShowFormEmployee = true;
     },
     saveOnClick() {
-      console.log(this.newForm);
+      if (this.isAdding) {
+        registerOvertime.addRegisterOvertime(this.newForm);
+        this.$emit("closeFormRegisterOvertime");
+        return;
+      } else if (this.isEditing) {
+        registerOvertime.updateRegisterOvertime(this.newForm);
+        this.$emit("closeFormRegisterOvertime");
+        return;
+      }
     },
     toggleTimePanel() {
       this.showTimePanel = !this.showTimePanel;
     },
     handleOpenChange() {
       this.showTimePanel = false;
-    },
+    }
   },
+  created(){
+    if(this.isEditing){
+        this.newForm = this.selectedForm;
+    }
+  }
 };
 </script>
