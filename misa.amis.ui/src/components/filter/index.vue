@@ -16,12 +16,26 @@
         :checkboxText="item.name"
         :selectBox="item.typeOfString"
         :datePicker="item.typeOfDate"
-        v-show="item.name.toLowerCase().includes(searchValue.toLowerCase())"
+        v-show="
+          item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          removeAccents(item.name.toLowerCase()).includes(
+            searchValue.toLowerCase()
+          )
+        "
       />
     </div>
     <div class="filter-bottom ms-flex">
-      <button class="btn-cancel ms-button ms-button-secondary bg-hover-secondary bg-active-secondary mr-2" @click="close">Bỏ lọc</button>
-      <button class="btn-apply ms-button ms-button-primary bg-hover-primary bg-active-primary">Áp dụng</button>
+      <button
+        class="btn-cancel ms-button ms-button-secondary bg-hover-secondary bg-active-secondary mr-2"
+        @click="close"
+      >
+        Bỏ lọc
+      </button>
+      <button
+        class="btn-apply ms-button ms-button-primary bg-hover-primary bg-active-primary"
+      >
+        Áp dụng
+      </button>
     </div>
   </div>
 </template>
@@ -40,11 +54,11 @@ export default {
         { name: "Người nộp đơn", typeOfDate: false, typeOfString: true },
         { name: "Người duyệt", typeOfDate: false, typeOfString: true },
         { name: "Ngày lập", typeOfDate: true, typeOfString: false },
-        { name: "Từ ngày", typeOfDate: true,typeOfString: false },
+        { name: "Từ ngày", typeOfDate: true, typeOfString: false },
         { name: "Đến ngày", typeOfDate: true, typeOfString: false },
-        { name: "Trạng thái", typeOfDate: false, typeOfString: true }
+        { name: "Trạng thái", typeOfDate: false, typeOfString: true },
       ],
-      searchValue: ""
+      searchValue: "",
     };
   },
   methods: {
@@ -53,7 +67,31 @@ export default {
     },
     handleInput(val) {
       this.searchValue = val;
-    }
+    },
+    removeAccents(str) {
+      var AccentsMap = [
+        "aàảãáạăằẳẵắặâầẩẫấậ",
+        "AÀẢÃÁẠĂẰẲẴẮẶÂẦẨẪẤẬ",
+        "dđ",
+        "DĐ",
+        "eèẻẽéẹêềểễếệ",
+        "EÈẺẼÉẸÊỀỂỄẾỆ",
+        "iìỉĩíị",
+        "IÌỈĨÍỊ",
+        "oòỏõóọôồổỗốộơờởỡớợ",
+        "OÒỎÕÓỌÔỒỔỖỐỘƠỜỞỠỚỢ",
+        "uùủũúụưừửữứự",
+        "UÙỦŨÚỤƯỪỬỮỨỰ",
+        "yỳỷỹýỵ",
+        "YỲỶỸÝỴ",
+      ];
+      for (var i = 0; i < AccentsMap.length; i++) {
+        var re = new RegExp("[" + AccentsMap[i].substr(1) + "]", "g");
+        var char = AccentsMap[i][0];
+        str = str.replace(re, char);
+      }
+      return str;
+    },
   },
 };
 </script>
@@ -93,10 +131,10 @@ export default {
   border-bottom-right-radius: 8px;
 }
 
-.filter .filter-bottom .btn-cancel{
+.filter .filter-bottom .btn-cancel {
   width: 100px;
 }
-.filter .filter-bottom .btn-apply{
+.filter .filter-bottom .btn-apply {
   width: 100px;
   background-color: #ec5504;
   color: #fff;
