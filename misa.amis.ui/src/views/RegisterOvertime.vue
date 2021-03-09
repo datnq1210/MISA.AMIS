@@ -23,7 +23,15 @@
         <div class="icon-filter"></div>
       </button>
     </div>
-    <div v-if="false" class="register-overtime-header">Đã chọn 1</div>
+    <div v-if="false" class="register-overtime-header">
+      <span>Đã chọn <b>1</b></span>
+      <button class="btn-untick ms-button ml-4">Bỏ chọn</button>
+      <button class="btn-delete-mutilple ms-button ms-flex ml-4 pl-3 pr-4">
+        <div class="icon-delete mr-1"></div>
+        <div>Xóa</div>
+      </button>
+    </div>
+    
     <div class="register-overtime-content">
       <ms-grid
         :data="registerOvertime"

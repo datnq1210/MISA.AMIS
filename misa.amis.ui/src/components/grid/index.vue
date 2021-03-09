@@ -298,7 +298,7 @@ export default {
 }
 
 .dx-header-row > td {
-  height: 45px !important;
+  height: 46px !important;
   line-height: 45px !important;
   font-weight: 700;
 }

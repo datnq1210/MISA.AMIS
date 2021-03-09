@@ -8,8 +8,21 @@
   margin-bottom: 16px;
   display: flex;
   align-items: center;
+  font-size: 14px;
+}
+.register-overtime-header .ms-button{
+  font-size: 14px;
+  color: #ef292f;
+}
+.register-overtime-header  .btn-delete-mutilple{
+  background: #fff;
+  border: 1px solid #ef292f;
+  font-weight: 500;
 }
 
+.register-overtime-header  .btn-delete-mutilple:hover{
+  background-color: #fee8e7;
+}
 .register-overtime-content{
   display: flex;
   height: calc(100% - 52px);

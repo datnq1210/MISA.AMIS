@@ -63,7 +63,7 @@
                 value-type="DD/MM/YYYY HH::mm"
                 type="datetime"
                 placeholder="Làm thêm từ"
-                format="YYYY-MM-DD HH:mm"
+                format="DD-MM-YYYY HH:mm"
                 :show-time-panel="showTimePanel"
                 @close="handleOpenChange"
               >
@@ -80,9 +80,9 @@
               <label>Làm thêm đến <span class="label-require">*</span></label>
               <date-picker
                 :lang="lang"
-                value-type="DD/MM/YYYY HH::mm"
+                value-type="DD/MM/YYYY HH:mm"
                 placeholder="Làm thêm đến"
-                format="YYYY-MM-DD HH:mm"
+                format="DD-MM-YYYY HH:mm"
                 v-model="newForm.dateWorkEnd"
                 type="datetime"
                 :show-time-panel="showTimePanel"
@@ -302,7 +302,17 @@ export default {
     },
     handleOpenChange() {
       this.showTimePanel = false;
-    }
+    },
+    formatDate(date) {
+      var now = new Date(date);
+      var day = ("0" + now.getDate()).slice(-2);
+      var month = ("0" + (now.getMonth()+1)).slice(-2);
+      var hour = ("0" + (now.getHours())).slice(-2);
+      var minute = ("0" + (now.getMinutes())).slice(-2);
+      var today =  (day) + "/" + (month) + "/" +  + now.getFullYear() 
+      + " " + (hour)+":"+(minute);
+      return today;
+    },
   },
   created(){
     if(this.isEditing){
