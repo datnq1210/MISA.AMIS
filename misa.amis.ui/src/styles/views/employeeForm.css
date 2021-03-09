@@ -3,6 +3,11 @@
   border-radius: 4px;
 }
 
+.dx-widget input {
+  font-family: 'Roboto' !important;
+  font-weight: 400 !important;
+}
+
 .employee-form .btn-cancel:hover,
 .employee-form .btn-cancel:focus {
   background-color: var(--button-secondary-hover-bg-color);

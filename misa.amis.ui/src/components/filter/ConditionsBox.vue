@@ -57,6 +57,10 @@ export default {
       Boolean,
       default: false,
     },
+    searchValue: {
+      type: String,
+      default: "",
+    }
   },
   data() {
     return {

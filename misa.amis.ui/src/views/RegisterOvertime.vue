@@ -12,10 +12,7 @@
       </div>
       <v-spacer></v-spacer>
       <ms-search-box :isIcon="true" style="width: 240px" class="mr-2" />
-      <button
-        class="btn-add ms-flex mr-2 pl-3 pr-4"
-        @click="addForm"
-      >
+      <button class="btn-add ms-flex mr-2 pl-3 pr-4" @click="addForm">
         <div class="icon-add mr-1 my-2 ml-2"></div>
         <div>Thêm</div>
       </button>
@@ -24,14 +21,19 @@
       </button>
     </div>
     <div v-if="isCheckedRow" class="register-overtime-header">
-      <span>Đã chọn <b>{{ rowCheckCount }}</b></span>
+      <span
+        >Đã chọn <b>{{ rowCheckCount }}</b></span
+      >
       <button class="btn-untick ms-button ml-4">Bỏ chọn</button>
-      <button class="btn-delete-mutilple ms-button ms-flex ml-4 pl-3 pr-4">
+      <button
+        class="btn-delete-mutilple ms-button ms-flex ml-4 pl-3 pr-4"
+        @click="deleteCheckRows"
+      >
         <div class="icon-delete mr-1"></div>
         <div>Xóa</div>
       </button>
     </div>
-    
+
     <div class="register-overtime-content">
       <ms-grid
         :data="registerOvertime"
@@ -129,7 +131,7 @@ export default {
     openFormRegisterOvertime() {
       this.isShowFormRegisterOvertime = true;
     },
-    addForm(){
+    addForm() {
       this.isAdding = true;
       this.isEditing = false;
       this.isShowFormRegisterOvertime = true;
@@ -145,9 +147,15 @@ export default {
       this.selectedForm = obj;
       this.isShowFormRegisterOvertime = true;
     },
-    onCheckRow(isCheck, count){
+    onCheckRow(isCheck, count) {
       this.isCheckedRow = isCheck;
       this.rowCheckCount = count;
+    },
+    deleteCheckRows(rows) {
+      for (var i = 0; i < rows.length; i++) {
+        registerOvertime.removeRegisterOvertime(rows[i]);
+      }
+      this.loadData();
     },
     closeFormRegisterOvertime() {
       this.isShowFormRegisterOvertime = false;

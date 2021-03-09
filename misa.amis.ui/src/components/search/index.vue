@@ -1,13 +1,23 @@
 <template>
   <div class="search-box ">
     <v-icon v-if="isIcon" class="mr-2">mdi-magnify</v-icon>
-    <input type="search" placeholder="Tìm kiếm" class="ms-input" />
+    <input type="search" placeholder="Tìm kiếm" class="ms-input" v-model="searchValue" @input="handleInput"/>
   </div>
 </template>
 <script>
 export default {
     name: 'ms-search-box',
-    props: ['isIcon']
+    props: ['isIcon'],
+    data() {
+      return {
+        searchValue: null
+      }
+    },
+    methods: {
+      handleInput() {
+        this.$emit("changed", this.searchValue);
+      }
+    }
 };
 </script>
 

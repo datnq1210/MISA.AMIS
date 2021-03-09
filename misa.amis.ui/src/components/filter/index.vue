@@ -7,7 +7,7 @@
           <div class="icon-close-popup"></div>
         </button>
       </div>
-      <ms-search-box :isIcon="true" />
+      <ms-search-box :isIcon="true" @changed="handleInput" />
     </div>
     <div class="filter-condition-box px-2 mt-2">
       <ConditionsBox
@@ -16,6 +16,7 @@
         :checkboxText="item.name"
         :selectBox="item.typeOfString"
         :datePicker="item.typeOfDate"
+        v-show="item.name.toLowerCase().includes(searchValue.toLowerCase())"
       />
     </div>
     <div class="filter-bottom ms-flex">
@@ -43,12 +44,16 @@ export default {
         { name: "Đến ngày", typeOfDate: true, typeOfString: false },
         { name: "Trạng thái", typeOfDate: false, typeOfString: true }
       ],
+      searchValue: ""
     };
   },
   methods: {
     close() {
       this.$emit("closeFilterBox");
     },
+    handleInput(val) {
+      this.searchValue = val;
+    }
   },
 };
 </script>

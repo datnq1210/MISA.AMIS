@@ -89,8 +89,6 @@
         </button>
       </div>
     </div>
-    <!-- <div v-if="adjustColumn" >
-    </div> -->
     <transition>
       <AdjustColumn
         v-show="isShowAdjustColumn"
@@ -137,7 +135,7 @@ export default {
     minWidth: {
       type: Number,
       default: 0,
-    },
+    }
   },
   computed: {
     recordTotal() {
