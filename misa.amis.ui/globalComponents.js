@@ -38,3 +38,9 @@ Vue.component(Select.name, Select);
 
 import Dialog from '@/components/dialog'
 Vue.component(Dialog.name, Dialog);
+
+import ToolTip from '@/components/tooltip'
+Vue.component(ToolTip.name, ToolTip);
+
+import ToastMenu from '@/components/toastmenu'
+Vue.component(ToastMenu.name, ToastMenu);

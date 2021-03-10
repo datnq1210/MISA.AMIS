@@ -64,8 +64,7 @@
   background-color: #fff;
 }
 
-
-.icon-edit{
+.icon-edit {
   width: 18px;
   height: 20px;
   background-image: url("~@/assets/icon.svg");
@@ -73,11 +72,11 @@
   background-repeat: no-repeat;
 }
 
-.icon-delete{
+.icon-delete {
   width: 18px;
   height: 20px;
   background-image: url("~@/assets/icon.svg");
-  background-position:-170px -26px;
+  background-position: -170px -26px;
   background-repeat: no-repeat;
 }
 
@@ -90,16 +89,18 @@
 }
 
 .icon-info {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   -webkit-mask-image: url("~@/assets/icon.svg");
   mask-image: url("~@/assets/icon.svg");
   -webkit-mask-position: -242px -74px;
   mask-position: -242px -74px;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  background-color: var(--primary);
+  background-color: #ff6161 !important;
 }
+
+
 
 .icon-close-popup {
   width: 12px;

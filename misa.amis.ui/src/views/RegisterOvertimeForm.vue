@@ -27,17 +27,20 @@
                 :noDataText="noDataMsg"
                 class="ms-combobox"
               >
-                <DxValidator>
-                  <DxRequiredRule message="Người nộp đơn không được để trống" />
-                </DxValidator>
               </DxSelectBox>
+              <ms-tooltip v-if="!newForm.applicant"></ms-tooltip>
             </div>
 
             <!-- Đơn vị công tác -->
             <div class="ms-row">
               <label>Đơn vị công tác</label>
               <div class="ms-combobox ms-flex ms-button-disable">
-                <input type="text" class="ms-input px-2" disabled />
+                <input
+                  type="text"
+                  class="ms-input px-2"
+                  disabled
+                  value="Hà nội"
+                />
               </div>
             </div>
 
@@ -52,6 +55,7 @@
                 format="DD/MM/YYYY"
                 value-type="YYYY/MM/DD"
               ></date-picker>
+              <ms-tooltip class="mr-2"></ms-tooltip>
             </div>
 
             <!-- Làm thêm từ -->
@@ -191,7 +195,6 @@
 
 <script>
 import DxSelectBox from "devextreme-vue/select-box";
-import { DxValidator, DxRequiredRule } from "devextreme-vue/validator";
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/locale/vi";
 import "vue2-datepicker/index.css";
@@ -208,8 +211,6 @@ export default {
   components: {
     DxSelectBox,
     DatePicker,
-    DxValidator,
-    DxRequiredRule,
   },
   computed: {
     noDataMsg() {
@@ -319,7 +320,7 @@ export default {
         ":" +
         minute;
       return today;
-    }
+    },
   },
   created() {
     if (this.isEditing) {

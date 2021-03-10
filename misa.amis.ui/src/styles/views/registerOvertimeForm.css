@@ -16,10 +16,11 @@
   color: var(--white);
 }
 
-.btn-add-employee{
+.btn-add-employee {
   color: #3c4ada;
 }
 
-.btn-add-employee .icon-add{
+.btn-add-employee .icon-add {
   background: #3c4ada !important;
 }
+

@@ -58,9 +58,6 @@ export default {
     handleSave() {
       this.$emit("onSaveFilter", this.headersX);
       this.$emit("closeAdjustColumn");
-    },
-    handleCheck(){
-      this.headersX = JSON.parse(JSON.stringify(this.headers));
     }
   }
 };

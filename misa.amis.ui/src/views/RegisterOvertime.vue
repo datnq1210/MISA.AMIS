@@ -45,7 +45,6 @@
         @deleteOnClick="deleteForm"
         @editOnClick="getSelectedForm"
         @onCheckRow="onCheckRow"
-        @de-select="deSelectRows"
         ref="GridTb"
       />
       <ms-filter v-show="isShowFilterBox" @closeFilterBox="closeFilterBox" />
