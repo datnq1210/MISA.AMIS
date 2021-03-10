@@ -5,7 +5,7 @@ button{
 .ms-button{
     width: auto;
     border-radius: var(--input-border-radius);
-    height: 35px;
+    height: 36px;
 }
 
 .ms-button-disable{

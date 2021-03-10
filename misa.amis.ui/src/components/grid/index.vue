@@ -12,6 +12,7 @@
         @row-click="getSelectedRow"
         @selection-changed="onSelectionChanged"
         style="border: 1px solid #e0e0e0"
+        ref="MsGrid"
       >
         <DxSelection
           mode="multiple"
@@ -20,7 +21,7 @@
         />
 
         <DxPaging :enabled="false" />
-
+        <DxScrolling use-native="true"/>
         <DxColumn
           v-show="adjustColumn"
           id="adjust-column"
@@ -81,10 +82,10 @@
           Từ <b>{{ recordTotal ? "01" : "0" }}</b> đến
           <b>{{ recordTotal }}</b> bản ghi
         </div>
-        <button class="mr-6">
+        <button class="mr-2">
           <div class="icon-prev-page mr-6"></div>
         </button>
-        <button class="ml-6">
+        <button class="ml-2">
           <div class="icon-next-page"></div>
         </button>
       </div>
@@ -108,6 +109,7 @@ import {
   DxColumn,
   DxSelection,
   DxPaging,
+  DxScrolling
 } from "devextreme-vue/data-grid";
 import AdjustColumn from "./AdjustColumn";
 export default {
@@ -118,6 +120,7 @@ export default {
     DxSelection,
     AdjustColumn,
     DxPaging,
+    DxScrolling
   },
   props: {
     data: {
@@ -143,9 +146,7 @@ export default {
       if (count < 10 && count > 0) return "0" + count;
       return count;
     },
-    headers() {
-      return this.columns;
-    },
+    
   },
   data() {
     return {
@@ -155,6 +156,7 @@ export default {
       isEditing: false,
       isDeleting: false,
       pages: [{ text: "15" }, { text: "25" }, { text: "50" }, { text: "100" }],
+      headers: JSON.parse(JSON.stringify(this.columns))
     };
   },
   methods: {
@@ -198,6 +200,9 @@ export default {
     },
     closeAdjustColumn() {
       this.isShowAdjustColumn = false;
+    },
+    clearAll() {
+      this.$refs.MsGrid.instance.clearSelection();
     },
     checkClickOn(event) {
       try {
@@ -402,8 +407,8 @@ export default {
 }
 
 .pagingOption {
-  width: 80px;
-  height: 38px !important;
+  width: 75px;
+  height: 40px !important;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 8px;

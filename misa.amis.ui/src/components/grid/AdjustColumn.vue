@@ -41,7 +41,7 @@ export default {
   },
   data() {
     return {
-      headersX: this.headers,
+      headersX: JSON.parse(JSON.stringify(this.headers)),
     };
   },
   computed: {},
@@ -57,9 +57,10 @@ export default {
     },
     handleSave() {
       this.$emit("onSaveFilter", this.headersX);
+      this.$emit("closeAdjustColumn");
     },
-    handleChechk(){
-      this.headersX = this.headers;
+    handleCheck(){
+      this.headersX = JSON.parse(JSON.stringify(this.headers));
     }
   }
 };
@@ -107,5 +108,9 @@ export default {
   align-items: center;
   justify-content: center;
   border-top: 1px solid #e0e0e0;
+}
+
+.dx-texteditor-input{
+  color: #212121 !important;
 }
 </style>

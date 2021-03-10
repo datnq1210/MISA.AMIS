@@ -35,3 +35,6 @@ Vue.component(SearchBox.name, SearchBox);
 
 import Select from '@/components/select'
 Vue.component(Select.name, Select);
+
+import Dialog from '@/components/dialog'
+Vue.component(Dialog.name, Dialog);

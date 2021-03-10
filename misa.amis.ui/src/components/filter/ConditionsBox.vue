@@ -8,7 +8,13 @@
       <div v-if="icon" class="icon-scale"></div>
     </div>
     <div class="mt-2" v-if="checkboxValue">
-      <DxSelectBox :items="conditions" placeholder="Chọn điều kiện" />
+      <DxSelectBox
+        :data-source="conditions"
+        :value="conditions[0].id"
+        display-expr="text"
+        value-expr="id"
+        placeholder="Chọn điều kiện"
+      />
       <div class="mt-2"></div>
       <DxSelectBox
         v-if="selectBox"
@@ -60,13 +66,18 @@ export default {
     searchValue: {
       type: String,
       default: "",
-    }
+    },
   },
   data() {
     return {
       checkboxValue: false,
       noDataMsg: "Không có dữ liệu!",
-      conditions: ["Bằng", "Khác", "Trống", "Không trống"],
+      conditions: [
+        { id: 0, text: "Bằng" },
+        { id: 1, text: "Khác" },
+        { id: 2, text: "Trống" },
+        { id: 3, text: "Không trống" },
+      ],
       lang: {
         formatLocale: {
           firstDayOfWeek: 1,
@@ -90,4 +101,8 @@ export default {
 .ms-datepicker.mx-datepicker {
   width: 100% !important;
 }
+.dx-checkbox-has-text .dx-checkbox-icon{
+  margin-right: 6px !important;
+}
+
 </style>

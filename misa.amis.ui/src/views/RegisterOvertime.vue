@@ -24,7 +24,7 @@
       <span
         >Đã chọn <b>{{ rowCheckCount }}</b></span
       >
-      <button class="btn-untick ms-button ml-4">Bỏ chọn</button>
+      <button class="btn-deselect ms-button ml-4" @click="onRemove">Bỏ chọn</button>
       <button
         class="btn-delete-mutilple ms-button ms-flex ml-4 pl-3 pr-4"
         @click="deleteCheckRows"
@@ -45,6 +45,8 @@
         @deleteOnClick="deleteForm"
         @editOnClick="getSelectedForm"
         @onCheckRow="onCheckRow"
+        @de-select="deSelectRows"
+        ref="GridTb"
       />
       <ms-filter v-show="isShowFilterBox" @closeFilterBox="closeFilterBox" />
     </div>
@@ -125,8 +127,11 @@ export default {
     };
   },
   methods: {
+    onRemove() {
+      this.$refs.GridTb.clearAll();
+    },
     updateHeader(val) {
-      this.columns = { ...val };
+      this.columns = JSON.parse(JSON.stringify(val));
     },
     openFormRegisterOvertime() {
       this.isShowFormRegisterOvertime = true;

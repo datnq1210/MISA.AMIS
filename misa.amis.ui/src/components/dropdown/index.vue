@@ -5,10 +5,10 @@
       @click="isOpen = !isOpen"
       :class="{ isActive: isOpen, isSlected: isSelected }"
     >
-      <div class="ml-3">
+      <div class="ml-4">
         <slot />
       </div>
-      <div class="mi-chevron-down-white"></div>
+      <div class="mi-chevron-down-white mr-2"></div>
     </button>
     <transition name="fade" appear>
       <div class="dropdown-list" v-if="isOpen">

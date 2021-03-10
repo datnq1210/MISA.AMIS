@@ -5,9 +5,6 @@
   border-radius: var(--input-border-radius);
 }
 
-.mx-input{
-    border: 1px solid var(--input-normal-border-color) !important;
-}
 
 .mx-input:hover, .mx-input:focus {
     border-color: var(--primary) !important;

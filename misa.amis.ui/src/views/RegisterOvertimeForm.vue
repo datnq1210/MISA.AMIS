@@ -28,7 +28,7 @@
                 class="ms-combobox"
               >
                 <DxValidator>
-                  <DxRequiredRule message="Address is required" />
+                  <DxRequiredRule message="Người nộp đơn không được để trống" />
                 </DxValidator>
               </DxSelectBox>
             </div>
@@ -47,10 +47,10 @@
               <date-picker
                 :lang="lang"
                 v-model="newForm.dateCreate"
-                placeholder="Ngày nộp đơn"
+                placeholder="DD/MM/YYYY"
                 class="ms-datetime-picker"
                 format="DD/MM/YYYY"
-                value-type="YYYY-MM-DD"
+                value-type="YYYY/MM/DD"
               ></date-picker>
             </div>
 
@@ -62,8 +62,8 @@
                 v-model="newForm.dateWorkStart"
                 value-type="DD/MM/YYYY HH::mm"
                 type="datetime"
-                placeholder="Làm thêm từ"
-                format="DD-MM-YYYY HH:mm"
+                placeholder="DD/MM/YYYY HH:mm"
+                format="DD/MM/YYYY HH:mm"
                 :show-time-panel="showTimePanel"
                 @close="handleOpenChange"
               >
@@ -81,8 +81,8 @@
               <date-picker
                 :lang="lang"
                 value-type="DD/MM/YYYY HH:mm"
-                placeholder="Làm thêm đến"
-                format="DD-MM-YYYY HH:mm"
+                placeholder="DD/MM/YYYY HH:mm"
+                format="DD/MM/YYYY HH:mm"
                 v-model="newForm.dateWorkEnd"
                 type="datetime"
                 :show-time-panel="showTimePanel"
@@ -140,12 +140,11 @@
             <div class="ms-row">
               <label>Trạng thái <span class="label-require">*</span></label>
               <DxSelectBox
-                :items="states"
-                :search-enabled="true"
-                placeholder=""
                 class="ms-combobox"
-                v-model="newForm.status"
+                :placeholder="null"
                 :noDataText="noDataMsg"
+                :items="states"
+                v-model="newForm.status"
               />
             </div>
           </div>
@@ -306,18 +305,26 @@ export default {
     formatDate(date) {
       var now = new Date(date);
       var day = ("0" + now.getDate()).slice(-2);
-      var month = ("0" + (now.getMonth()+1)).slice(-2);
-      var hour = ("0" + (now.getHours())).slice(-2);
-      var minute = ("0" + (now.getMinutes())).slice(-2);
-      var today =  (day) + "/" + (month) + "/" +  + now.getFullYear() 
-      + " " + (hour)+":"+(minute);
+      var month = ("0" + (now.getMonth() + 1)).slice(-2);
+      var hour = ("0" + now.getHours()).slice(-2);
+      var minute = ("0" + now.getMinutes()).slice(-2);
+      var today =
+        day +
+        "/" +
+        month +
+        "/" +
+        +now.getFullYear() +
+        " " +
+        hour +
+        ":" +
+        minute;
       return today;
-    },
-  },
-  created(){
-    if(this.isEditing){
-        this.newForm = this.selectedForm;
     }
-  }
+  },
+  created() {
+    if (this.isEditing) {
+      this.newForm = this.selectedForm;
+    }
+  },
 };
 </script>
