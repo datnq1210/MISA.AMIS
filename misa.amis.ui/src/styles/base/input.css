@@ -5,9 +5,16 @@
   border-radius: var(--input-border-radius);
 }
 
+.mx-input{
+  border: 1px solid #e0e0e0 !important;
+}
 
 .mx-input:hover, .mx-input:focus {
     border-color: var(--primary) !important;
+}
+
+.notValidDate .mx-input{
+  border: 1px solid red !important;
 }
 
 .input-border-hover:hover {

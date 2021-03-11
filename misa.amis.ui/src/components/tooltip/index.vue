@@ -1,13 +1,19 @@
 <template>
   <div class="ms-tooltip">
     <div class="icon-info"></div>
-    <div class="tooltip__content">Người nộp đơn không được để trống.</div>
+    <div class="tooltip__content">{{ errMsg }}</div>
   </div>
 </template>
 
 <script>
 export default {
   name: "ms-tooltip",
+  props:{
+    errMsg:{
+      type: String,
+      default: null
+    }
+  }
 };
 </script>
 

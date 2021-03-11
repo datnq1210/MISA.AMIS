@@ -5,6 +5,10 @@
   width: 62% !important;
 }
 
+.notValid {
+  border: 1px solid #ff6161 !important;
+}
+
 .dx-state-hover,
 .dx-state-focused {
   border: 1px solid var(--primary) !important;
