@@ -20,12 +20,12 @@
                 >Người nộp đơn <span class="label-require">*</span></label
               >
               <DxSelectBox
+                class="ms-combobox"
                 :items="applicants"
                 :search-enabled="true"
                 placeholder=""
                 v-model="newForm.applicant"
                 :noDataText="noDataMsg"
-                class="ms-combobox"
                 :class="{ notValid: !applicantsCheck.require }"
                 :onValueChanged="
                   () => (applicantsCheck.require = newForm.applicant)
@@ -113,9 +113,7 @@
                 type="datetime"
                 :show-time-panel="showTimePanel"
                 @close="handleOpenChange"
-                @change="
-                  () => (dateWorkEndCheck.require = newForm.dateWorkEndCheck)
-                "
+                @change="() => (dateWorkEndCheck.require = newForm.dateWorkEnd)"
                 :class="{ notValidDate: !dateWorkEndCheck.require }"
               >
                 <template v-slot:footer>
@@ -215,7 +213,6 @@
           </div>
           <button
             class="ms-button btn-add-employee ms-flex pl-3 pr-4"
-            :use-submit-behavior="true"
             @click="openFormEmployee"
           >
             <div class="icon-add mr-1"></div>
@@ -238,6 +235,27 @@
           Hủy
         </button>
       </div>
+      <ms-dialog
+        ref="msDialog"
+        :dialogHeader="'Thông báo'"
+        :dialogMsg="'Thông tin đã được thay đổi. Bạn có muốn lưu lại không?'"
+      >
+        <button
+          class="px-7  ms-button ms-button-primary bg-active-primary bg-hover-primary"
+        >
+          Lưu
+        </button>
+        <button
+          class="px-5 mr-2 ms-button ms-button-secondary bg-active-secondary bg-hover-secondary"
+        >
+          Không lưu
+        </button>
+        <button
+          class="px-7 mr-2 ms-button ms-button-secondary bg-active-secondary bg-hover-secondary"
+        >
+          Hủy
+        </button>
+      </ms-dialog>
     </div>
     <employee-form
       v-if="isShowFormEmployee"
@@ -249,6 +267,7 @@
 <script>
 import DxSelectBox from "devextreme-vue/select-box";
 import DatePicker from "vue2-datepicker";
+import moment from "moment";
 import "vue2-datepicker/locale/vi";
 import "vue2-datepicker/index.css";
 
@@ -279,13 +298,16 @@ export default {
         return employees.name;
       });
     },
+    isChangeValue() {
+      return JSON.stringify(this.newFormCache) != JSON.stringify(this.newForm);
+    },
   },
   data() {
     return {
       newForm: {
         Id: "",
         applicant: "",
-        dateCreate: "",
+        dateCreate: moment(Date.now()).format("YYYY/MM/DD"),
         dateWorkStart: "",
         dateWorkEnd: "",
         reasonOvertime: "",
@@ -293,6 +315,7 @@ export default {
         note: "",
         status: "",
       },
+      newFormCache: { ...this.newForm },
       applicantsCheck: {
         require: true,
         errMsg: "Người nộp đơn không được trống",
@@ -332,6 +355,7 @@ export default {
       },
       isShowFormEmployee: false,
       showTimePanel: false,
+      isFirstDropdown: true,
     };
   },
   props: {
@@ -360,7 +384,14 @@ export default {
   },
   methods: {
     closeFormRegisterOvertime() {
-      this.$emit("closeFormRegisterOvertime");
+      if (this.isChangeValue) {
+        var dif = confirm("Ban co muon thay doi khong?");
+        this.$refs.msDialog.open();
+        if (dif == true) {
+          this.$emit("closeFormRegisterOvertime");
+          return;
+        }
+      } else this.$emit("closeFormRegisterOvertime");
     },
     closeFormEmployee() {
       this.isShowFormEmployee = false;
@@ -406,29 +437,15 @@ export default {
         this.newForm.dateWorkEnd
       );
     },
-    formatDate(date) {
-      var now = new Date(date);
-      var day = ("0" + now.getDate()).slice(-2);
-      var month = ("0" + (now.getMonth() + 1)).slice(-2);
-      var hour = ("0" + now.getHours()).slice(-2);
-      var minute = ("0" + now.getMinutes()).slice(-2);
-      var today =
-        day +
-        "/" +
-        month +
-        "/" +
-        +now.getFullYear() +
-        " " +
-        hour +
-        ":" +
-        minute;
-      return today;
-    },
   },
   created() {
     if (this.isEditing) {
-      this.newForm = this.selectedForm;
+      this.newForm = { ...this.selectedForm };
     }
+    this.newFormCache = { ...this.newForm };
+    console.log(
+      JSON.stringify(this.newFormCache) == JSON.stringify(this.newForm)
+    );
   },
 };
 </script>
