@@ -242,16 +242,33 @@
       >
         <button
           class="px-7  ms-button ms-button-primary bg-active-primary bg-hover-primary"
+          @click="
+            () => {
+              this.saveOnClick();
+              this.$refs.msDialog.close();
+            }
+          "
         >
           Lưu
         </button>
         <button
           class="px-5 mr-2 ms-button ms-button-secondary bg-active-secondary bg-hover-secondary"
+          @click="
+            () => {
+              this.$refs.msDialog.close();
+              this.$emit('closeFormRegisterOvertime');
+            }
+          "
         >
           Không lưu
         </button>
         <button
           class="px-7 mr-2 ms-button ms-button-secondary bg-active-secondary bg-hover-secondary"
+          @click="
+            () => {
+              this.$refs.msDialog.close();
+            }
+          "
         >
           Hủy
         </button>
@@ -344,7 +361,6 @@ export default {
         require: true,
         errMsg: "Trạng thái không được trống",
       },
-      requireField: true,
       states: ["Chờ duyệt", "Đã duyệt", "Từ chối"],
       lang: {
         formatLocale: {
@@ -355,7 +371,6 @@ export default {
       },
       isShowFormEmployee: false,
       showTimePanel: false,
-      isFirstDropdown: true,
     };
   },
   props: {
@@ -385,12 +400,8 @@ export default {
   methods: {
     closeFormRegisterOvertime() {
       if (this.isChangeValue) {
-        var dif = confirm("Ban co muon thay doi khong?");
         this.$refs.msDialog.open();
-        if (dif == true) {
-          this.$emit("closeFormRegisterOvertime");
-          return;
-        }
+        return;
       } else this.$emit("closeFormRegisterOvertime");
     },
     closeFormEmployee() {
@@ -440,7 +451,7 @@ export default {
   },
   created() {
     if (this.isEditing) {
-      this.newForm = { ...this.selectedForm };
+      this.newForm = this.selectedForm;
     }
     this.newFormCache = { ...this.newForm };
     console.log(
