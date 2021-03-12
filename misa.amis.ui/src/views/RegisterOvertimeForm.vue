@@ -60,7 +60,7 @@
                 placeholder="DD/MM/YYYY"
                 class="ms-datetime-picker"
                 format="DD/MM/YYYY"
-                value-type="YYYY/MM/DD"
+                value-type="YYYY-MM-DD"
                 :class="{ notValidDate: !dateCreateCheck.valid }"
                 @change="
                   () => {
@@ -82,10 +82,10 @@
               <date-picker
                 :lang="lang"
                 v-model="newForm.dateWorkStart"
-                value-type="DD/MM/YYYY HH::mm"
                 type="datetime"
-                placeholder="DD/MM/YYYY HH:mm"
                 format="DD/MM/YYYY HH:mm"
+                value-type="YYYY-MM-DD HH:mm:ss"
+                placeholder="DD/MM/YYYY HH:mm"
                 :show-time-panel="showTimePanel"
                 @close="handleOpenChange"
                 @change="checkDateWorkStart"
@@ -109,11 +109,11 @@
               <label>Làm thêm đến <span class="label-require">*</span></label>
               <date-picker
                 :lang="lang"
-                value-type="DD/MM/YYYY HH:mm"
                 placeholder="DD/MM/YYYY HH:mm"
-                format="DD/MM/YYYY HH:mm"
+                value-type="YYYY-MM-DD HH:mm:ss"
                 v-model="newForm.dateWorkEnd"
                 type="datetime"
+                format="DD/MM/YYYY HH:mm"
                 :show-time-panel="showTimePanel"
                 @close="handleOpenChange"
                 @change="checkDateWorkEnd"
@@ -327,7 +327,7 @@ export default {
       newForm: {
         Id: "",
         applicant: "",
-        dateCreate: moment(Date.now()).format("YYYY/MM/DD"),
+        dateCreate: moment(Date.now()).format("YYYY-MM-DD"),
         dateWorkStart: "",
         dateWorkEnd: "",
         reasonOvertime: "",
@@ -362,7 +362,7 @@ export default {
       },
       statusCheck: {
         valid: true,
-        errMsg: "Trạng thái không được trống",
+        errMsg: "Trạng thái không được để trống",
       },
       states: ["Chờ duyệt", "Đã duyệt", "Từ chối"],
       lang: {
@@ -414,8 +414,8 @@ export default {
       this.isShowFormEmployee = true;
     },
     saveOnClick() {
-      this.checkFieldRequire();
-      if (this.checkFieldRequire()) {
+      this.checkValidate();
+      if (this.checkValidate()) {
         if (this.isAdding) {
           registerOvertime.addRegisterOvertime(this.newForm);
           this.$emit("closeFormRegisterOvertime");
@@ -433,7 +433,7 @@ export default {
     handleOpenChange() {
       this.showTimePanel = false;
     },
-    checkFieldRequire() {
+    checkValidate() {
       this.applicantsCheck.valid = this.newForm.applicant;
       this.approvedByCheck.valid = this.newForm.approvedBy;
       this.statusCheck.valid = this.newForm.status;
@@ -475,19 +475,19 @@ export default {
       );
     },
     checkDateWorkStart() {
-      if (!this.newForm.dateWorkStart) {
-        this.dateWorkStartCheck.valid = false;
-        this.dateWorkStartCheck.errMsg = 'Làm thêm từ không được để trống.'
-      }
-      if (this.newForm.dateWorkStart){
-        this.dateWorkStartCheck.valid = true;
-      }
+      this.dateWorkStartCheck.valid = this.newForm.dateWorkStart;
+      console.log("Ngày bắt đầu: ", this.newForm.dateWorkStart);
+      console.log("Ngày kết thúc: ", this.newForm.dateWorkEnd);
+      console.log(
+        this.newForm.dateWorkStart > new Date(this.newForm.dateWorkEnd)
+      );
       if (
         this.newForm.dateWorkStart &&
         this.newForm.dateWorkEnd &&
         this.newForm.dateWorkStart > this.newForm.dateWorkEnd
       ) {
         this.dateWorkStartCheck.valid = false;
+        this.dateWorkEndCheck.valid = true;
         this.dateWorkStartCheck.errMsg =
           "Làm thêm từ phải nhỏ hơn làm thêm đến.";
       }
@@ -496,24 +496,24 @@ export default {
         this.newForm.dateWorkEnd &&
         this.newForm.dateWorkStart < this.newForm.dateWorkEnd
       ) {
-        this.dateWorkEndCheck.valid = true;
         this.dateWorkStartCheck.valid = true;
+        this.dateWorkEndCheck.valid = true;
       }
     },
-    checkDateWorkEnd(){
-      if (!this.newForm.dateWorkEnd) {
-        this.dateWorkEndCheck.valid = false;
-        this.dateWorkEndCheck.errMsg = 'Làm thêm đến không được để trống.'
-      }
-      if (this.newForm.dateWorkEnd){
-        this.dateWorkEndCheck.valid = true;
-      }
+    checkDateWorkEnd() {
+      this.dateWorkEndCheck.valid = this.newForm.dateWorkEnd;
+      console.log("Ngày bắt đầu: ", this.newForm.dateWorkStart);
+      console.log("Ngày kết thúc: ", this.newForm.dateWorkEnd);
+      console.log(
+        this.newForm.dateWorkStart > new Date(this.newForm.dateWorkEnd)
+      );
       if (
         this.newForm.dateWorkStart &&
         this.newForm.dateWorkEnd &&
         this.newForm.dateWorkStart > this.newForm.dateWorkEnd
       ) {
         this.dateWorkEndCheck.valid = false;
+        this.dateWorkStartCheck.valid = true;
         this.dateWorkEndCheck.errMsg = "Làm thêm đến phải lớn làm thêm từ.";
       }
       if (
@@ -521,19 +521,16 @@ export default {
         this.newForm.dateWorkEnd &&
         this.newForm.dateWorkStart < this.newForm.dateWorkEnd
       ) {
-        this.dateWorkEndCheck.valid = true;
         this.dateWorkStartCheck.valid = true;
+        this.dateWorkEndCheck.valid = true;
       }
-    }
+    },
   },
   created() {
     if (this.isEditing) {
       this.newForm = { ...this.selectedForm };
     }
     this.newFormCache = { ...this.newForm };
-    console.log(
-      JSON.stringify(this.newFormCache) == JSON.stringify(this.newForm)
-    );
   },
 };
 </script>
