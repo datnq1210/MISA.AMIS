@@ -26,14 +26,14 @@
                 placeholder=""
                 v-model="newForm.applicant"
                 :noDataText="noDataMsg"
-                :class="{ notValid: !applicantsCheck.require }"
+                :class="{ notValid: !applicantsCheck.valid }"
                 :onValueChanged="
-                  () => (applicantsCheck.require = newForm.applicant)
+                  () => (applicantsCheck.valid = newForm.applicant)
                 "
               >
               </DxSelectBox>
               <ms-tooltip
-                v-if="!applicantsCheck.require"
+                v-if="!applicantsCheck.valid"
                 :errMsg="applicantsCheck.errMsg"
               ></ms-tooltip>
             </div>
@@ -61,11 +61,16 @@
                 class="ms-datetime-picker"
                 format="DD/MM/YYYY"
                 value-type="YYYY/MM/DD"
-                :class="{ notValidDate: !dateCreateCheck.require }"
-                @change="() => (dateCreateCheck.require = newForm.dateCreate)"
+                :class="{ notValidDate: !dateCreateCheck.valid }"
+                @change="
+                  () => {
+                    if (!newForm.dateCreate) dateCreateCheck.valid = false;
+                    if (newForm.dateCreate ) dateCreateCheck.valid = true;
+                  }
+                "
               ></date-picker>
               <ms-tooltip
-                v-if="!dateCreateCheck.require"
+                v-if="!dateCreateCheck.valid"
                 :errMsg="dateCreateCheck.errMsg"
                 class="mr-2"
               ></ms-tooltip>
@@ -84,9 +89,23 @@
                 :show-time-panel="showTimePanel"
                 @close="handleOpenChange"
                 @change="
-                  () => (dateWorkStartCheck.require = newForm.dateWorkStart)
+                  () => {
+                    if (!newForm.dateWorkStart) {
+                      dateWorkStartCheck.valid = false;
+                      dateWorkStartCheck.errMsg =
+                        'Làm thêm từ không được trống.';
+                    }
+                    if (newForm.dateWorkStart) dateWorkStartCheck.valid = true;
+                    if (newForm.dateWorkEnd) {
+                      if (newForm.dateWorkStart > newForm.dateWorkEnd) {
+                        dateWorkStartCheck.valid = false;
+                        dateWorkStartCheck.errMsg =
+                          'Làm thêm từ phải nhỏ hơn làm thêm đến.';
+                      } else dateWorkStartCheck.valid = true;
+                    }
+                  }
                 "
-                :class="{ notValidDate: !dateWorkStartCheck.require }"
+                :class="{ notValidDate: !dateWorkStartCheck.valid }"
               >
                 <template v-slot:footer>
                   <button class="mx-btn mx-btn-text" @click="toggleTimePanel">
@@ -95,7 +114,7 @@
                 </template>
               </date-picker>
               <ms-tooltip
-                v-if="!dateWorkStartCheck.require"
+                v-if="!dateWorkStartCheck.valid"
                 :errMsg="dateWorkStartCheck.errMsg"
                 class="mr-2"
               ></ms-tooltip>
@@ -113,8 +132,24 @@
                 type="datetime"
                 :show-time-panel="showTimePanel"
                 @close="handleOpenChange"
-                @change="() => (dateWorkEndCheck.require = newForm.dateWorkEnd)"
-                :class="{ notValidDate: !dateWorkEndCheck.require }"
+                @change="
+                  () => {
+                    if (!newForm.dateWorkEnd) {
+                      dateWorkEndCheck.valid = false;
+                      dateWorkEndCheck.errMsg =
+                        'Làm thêm đến không được trống.';
+                    }
+                    if (newForm.dateWorkEnd) dateWorkEndCheck.valid = true;
+                    if (newForm.dateWorkStart) {
+                      if (newForm.dateWorkStart > newForm.dateWorkEnd) {
+                        dateWorkEndCheck.valid = false;
+                        dateWorkEndCheck.errMsg =
+                          'Làm thêm đến phải lớn hơn làm thêm từ.';
+                      } else dateWorkEndCheck.valid = true;
+                    }
+                  }
+                "
+                :class="{ notValidDate: !dateWorkEndCheck.valid }"
               >
                 <template v-slot:footer>
                   <button class="mx-btn mx-btn-text" @click="toggleTimePanel">
@@ -123,7 +158,7 @@
                 </template>
               </date-picker>
               <ms-tooltip
-                v-if="!dateWorkEndCheck.require"
+                v-if="!dateWorkEndCheck.valid"
                 :errMsg="dateWorkEndCheck.errMsg"
                 class="mr-2"
               ></ms-tooltip>
@@ -136,18 +171,18 @@
               <label>Lý do làm thêm <span class="label-require">*</span></label>
               <div
                 class="ms-text-arena ms-flex input-border-hover input-border-active input-border-active"
-                :class="{ notValid: !reasonOvertimeCheck.require }"
+                :class="{ notValid: !reasonOvertimeCheck.valid }"
               >
                 <textarea
                   maxlength="255"
                   v-model="newForm.reasonOvertime"
                   @keyup="
-                    () => (reasonOvertimeCheck.require = newForm.reasonOvertime)
+                    () => (reasonOvertimeCheck.valid = newForm.reasonOvertime)
                   "
                 ></textarea>
               </div>
               <ms-tooltip
-                v-if="!reasonOvertimeCheck.require"
+                v-if="!reasonOvertimeCheck.valid"
                 :errMsg="reasonOvertimeCheck.errMsg"
                 class="mt-6 mr-n6"
               ></ms-tooltip>
@@ -163,13 +198,13 @@
                 class="ms-combobox"
                 v-model="newForm.approvedBy"
                 :noDataText="noDataMsg"
-                :class="{ notValid: !approvedByCheck.require }"
+                :class="{ notValid: !approvedByCheck.valid }"
                 :onValueChanged="
-                  () => (approvedByCheck.require = newForm.approvedBy)
+                  () => (approvedByCheck.valid = newForm.approvedBy)
                 "
               />
               <ms-tooltip
-                v-if="!approvedByCheck.require"
+                v-if="!approvedByCheck.valid"
                 :errMsg="approvedByCheck.errMsg"
               ></ms-tooltip>
             </div>
@@ -194,11 +229,11 @@
                 :noDataText="noDataMsg"
                 :items="states"
                 v-model="newForm.status"
-                :class="{ notValid: !statusCheck.require }"
-                :onValueChanged="() => (statusCheck.require = newForm.status)"
+                :class="{ notValid: !statusCheck.valid }"
+                :onValueChanged="() => (statusCheck.valid = newForm.status)"
               />
               <ms-tooltip
-                v-if="!statusCheck.require"
+                v-if="!statusCheck.valid"
                 :errMsg="statusCheck.errMsg"
               ></ms-tooltip>
             </div>
@@ -334,31 +369,31 @@ export default {
       },
       newFormCache: { ...this.newForm },
       applicantsCheck: {
-        require: true,
-        errMsg: "Người nộp đơn không được trống",
+        valid: true,
+        errMsg: "Người nộp đơn không được để trống.",
       },
       dateCreateCheck: {
-        require: true,
-        errMsg: "Ngày nộp đơn không được trống",
+        valid: true,
+        errMsg: "Ngày nộp đơn không được để trống.",
       },
       dateWorkStartCheck: {
-        require: true,
-        errMsg: "Làm thêm từ không được trống",
+        valid: true,
+        errMsg: "Làm thêm từ không được để trống.",
       },
       dateWorkEndCheck: {
-        require: true,
-        errMsg: "Làm thêm đến không được trống",
+        valid: true,
+        errMsg: "Làm thêm đến không được để trống.",
       },
       approvedByCheck: {
-        require: true,
-        errMsg: "Người duyệt không được trống",
+        valid: true,
+        errMsg: "Người duyệt không được để trống.",
       },
       reasonOvertimeCheck: {
-        require: true,
+        valid: true,
         errMsg: "Lý do làm thêm không được trống",
       },
       statusCheck: {
-        require: true,
+        valid: true,
         errMsg: "Trạng thái không được trống",
       },
       states: ["Chờ duyệt", "Đã duyệt", "Từ chối"],
@@ -431,13 +466,21 @@ export default {
       this.showTimePanel = false;
     },
     handleRequire() {
-      this.applicantsCheck.require = this.newForm.applicant;
-      this.approvedByCheck.require = this.newForm.approvedBy;
-      this.statusCheck.require = this.newForm.status;
-      this.reasonOvertimeCheck.require = this.newForm.reasonOvertime;
-      this.dateCreateCheck.require = this.newForm.dateCreate;
-      this.dateWorkStartCheck.require = this.newForm.dateWorkStart;
-      this.dateWorkEndCheck.require = this.newForm.dateWorkEnd;
+      this.applicantsCheck.valid = this.newForm.applicant;
+      this.approvedByCheck.valid = this.newForm.approvedBy;
+      this.statusCheck.valid = this.newForm.status;
+      this.reasonOvertimeCheck.valid = this.newForm.reasonOvertime;
+      this.dateCreateCheck.valid = this.newForm.dateCreate;
+      this.dateWorkStartCheck.valid = this.newForm.dateWorkStart;
+      this.dateWorkEndCheck.valid = this.newForm.dateWorkEnd;
+
+      if (
+        this.newForm.dateWorkStart &&
+        this.newForm.dateWorkStart > this.newForm.dateWorkEnd
+      ) {
+        this.dateWorkStartCheck.valid = false;
+        this.dateCreateCheck.errMsg = "Làm thêm từ phải nhỏ hơn làm thêm đến.";
+      }
       return (
         this.newForm.applicant &&
         this.newForm.approvedBy &&
@@ -451,7 +494,7 @@ export default {
   },
   created() {
     if (this.isEditing) {
-      this.newForm = this.selectedForm;
+      this.newForm = {... this.selectedForm };
     }
     this.newFormCache = { ...this.newForm };
     console.log(

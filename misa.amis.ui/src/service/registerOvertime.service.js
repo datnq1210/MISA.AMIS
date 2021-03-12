@@ -41,6 +41,8 @@ export default {
 		registerOvertimes[objIndex].dateCreate = newObj.dateCreate;
 		registerOvertimes[objIndex].dateWorkEnd = newObj.dateWorkEnd;
 		registerOvertimes[objIndex].status = newObj.status;
+		registerOvertimes[objIndex].reasonOvertime = newObj.reasonOvertime;
+		registerOvertimes[objIndex].note = newObj.note;
 
 		//Log object to console again.
 		console.log("After update: ", registerOvertimes[objIndex])

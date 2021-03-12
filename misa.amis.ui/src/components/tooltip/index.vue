@@ -34,12 +34,13 @@ export default {
   width: max-content;
   border-radius: 4px;
   color: #fff;
-  top: -30px;
-  left: 35%;
+  top: -37px;
+  left: 40%;
   transform: translateX(-50%);
   font-size: 12px;
   visibility: hidden;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  padding: 8px;
 }
 
 .tooltip__content::after {

@@ -21,7 +21,7 @@
         />
 
         <DxPaging :enabled="false" />
-        <DxScrolling use-native="true"/>
+        <DxScrolling use-native="true" />
         <DxColumn
           v-show="adjustColumn"
           id="adjust-column"
@@ -90,6 +90,33 @@
         </button>
       </div>
     </div>
+    <ms-dialog
+      :dialogHeader="'Cảnh báo'"
+      :dialogMsg="'Bạn có chắc chắn muốn xóa Đơn xin làm thêm này không?'"
+      ref="confirmDeleteDialog"
+    >
+      <button
+        class="btn-dialog-delete"
+        @click="
+          () => {
+            this.$emit('deleteOnClick', this.selectedRow.Id);
+            this.$refs.confirmDeleteDialog.close();
+          }
+        "
+      >
+        Xóa
+      </button>
+      <button
+        class="btn-dialog-cancel ms-button mr-2 ms-button ms-button-secondary bg-hover-secondary bg-active-secondary"
+        @click="
+          () => {
+            this.$refs.confirmDeleteDialog.close();
+          }
+        "
+      >
+        Hủy
+      </button>
+    </ms-dialog>
     <transition>
       <AdjustColumn
         v-show="isShowAdjustColumn"
@@ -109,7 +136,7 @@ import {
   DxColumn,
   DxSelection,
   DxPaging,
-  DxScrolling
+  DxScrolling,
 } from "devextreme-vue/data-grid";
 import AdjustColumn from "./AdjustColumn";
 export default {
@@ -120,7 +147,7 @@ export default {
     DxSelection,
     AdjustColumn,
     DxPaging,
-    DxScrolling
+    DxScrolling,
   },
   props: {
     data: {
@@ -138,7 +165,7 @@ export default {
     minWidth: {
       type: Number,
       default: 0,
-    }
+    },
   },
   computed: {
     recordTotal() {
@@ -146,7 +173,6 @@ export default {
       if (count < 10 && count > 0) return "0" + count;
       return count;
     },
-    
   },
   data() {
     return {
@@ -156,16 +182,16 @@ export default {
       isEditing: false,
       isDeleting: false,
       pages: [{ text: "15" }, { text: "25" }, { text: "50" }, { text: "100" }],
-      headers: JSON.parse(JSON.stringify(this.columns))
+      headers: JSON.parse(JSON.stringify(this.columns)),
     };
   },
   methods: {
     getSelectedRow(e) {
       this.selectedRow = e.data;
-      if (this.isDeleting) {
-        this.$emit("deleteOnClick", this.selectedRow.Id);
-        this.isDeleting = false;
-      }
+      // if (this.isDeleting) {
+      //   this.$emit("deleteOnClick", this.selectedRow.Id);
+      //   this.isDeleting = false;
+      // }
       if (this.isEditing) {
         this.$emit("editOnClick", this.selectedRow);
         this.isEditing = false;
@@ -178,7 +204,8 @@ export default {
       this.defaultVisible = !this.defaultVisible;
     },
     deleteRow() {
-      this.isDeleting = true;
+      this.$refs.confirmDeleteDialog.open();
+      // this.isDeleting = true;
     },
     editRow() {
       this.isEditing = true;
@@ -195,7 +222,8 @@ export default {
       console.log(currentDeselectedRowKeys);
       console.log(allSelectedRowKeys.length);
       console.log(allSelectedRowsData);
-      if (allSelectedRowKeys.length > 0) this.$emit("onCheckRow", true, allSelectedRowKeys.length);
+      if (allSelectedRowKeys.length > 0)
+        this.$emit("onCheckRow", true, allSelectedRowKeys.length);
       else if (allSelectedRowKeys.length <= 0) this.$emit("onCheckRow", false);
     },
     closeAdjustColumn() {
@@ -418,5 +446,20 @@ export default {
 }
 .pagingOption .option {
   top: -170px;
+}
+
+.btn-dialog-cancel,
+.btn-dialog-delete {
+  padding: 0 16px 0 16px;
+  width: 80px !important;
+  border-radius: 4px;
+}
+
+.btn-dialog-delete {
+  background: #ef292f;
+  color: #fff;
+  border: 1px solid #ef292f;
+  font-size: 14px;
+  font-weight: 500;
 }
 </style>

@@ -76,6 +76,11 @@ export default {
   width: 100%;
   height: 53px;
 }
+
+.dialog-content{
+  font-size: 14px;
+}
+
 .dialog-bottom {
   display: flex;
   flex-direction: row-reverse;
