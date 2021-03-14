@@ -24,7 +24,9 @@
       <span
         >Đã chọn <b>{{ rowCheckCount }}</b></span
       >
-      <button class="btn-deselect ms-button ml-4" @click="onRemove">Bỏ chọn</button>
+      <button class="btn-deselect ms-button ml-4" @click="onRemove">
+        Bỏ chọn
+      </button>
       <button
         class="btn-delete-mutilple ms-button ms-flex ml-4 pl-3 pr-4"
         @click="deleteCheckRows"
@@ -36,11 +38,11 @@
 
     <div class="register-overtime-content">
       <ms-grid
-        :data="registerOvertime"
+        :tableName="registerOvertime"
+        :primaryKey="'overtimeId'"
         :columns="columns"
         :adjustColumn="true"
-        :minWidth="100"
-        :deleteData="deleteForm"
+        :minWidth="0"
         @updateHeader="updateHeader"
         @deleteOnClick="deleteForm"
         @editOnClick="getSelectedForm"
@@ -64,8 +66,7 @@
 <script>
 import "devextreme/dist/css/dx.common.css";
 import "devextreme/dist/css/dx.light.css";
-
-import registerOvertime from "@/service/registerOvertime.service.js";
+import overtimeForm from "@/service/overtime.service.js";
 
 export default {
   name: "register-overtime",
@@ -76,46 +77,43 @@ export default {
       isShowFilterBox: false,
       isCheckedRow: false,
       rowCheckCount: 0,
-      registerOvertime: [],
+      registerOvertime: null,
       selectedForm: {
-        Id: "",
-        applicant: "",
-        dateCreate: "",
-        dateWorkStart: "",
-        dateWorkEnd: "",
-        reasonOvertime: "",
-        approvedBy: "",
-        note: "",
-        status: "",
+        overtimeId: null,
+        dateCreate: null,
+        dateWorkStart: null,
+        dateWorkEnd: null,
+        workTime: null,
+        reasonOvertime: null,
+        note: null,
+        state: null,
+        applicantId: null,
+        approverId: null,
       },
       isAdding: false,
       isEditing: false,
       columns: [
         {
-          ID: "1",
-          datafield: "applicant",
+          datafield: "applicantName",
           caption: "Người nộp đơn",
           visible: true,
         },
         {
-          ID: "2",
-          datafield: "approvedBy",
+          datafield: "approverName",
           caption: "Người duyệt",
           visible: true,
         },
         {
-          ID: "3",
           datafield: "dateCreate",
           caption: "Ngày lập",
           visible: true,
         },
         {
-          ID: "4",
-          datafield: "dateWorkEnd",
+          datafield: "workTime",
           caption: "Thời gian",
           visible: true,
         },
-        { ID: "5", datafield: "status", caption: "Trạng thái", visible: true },
+        { datafield: "state", caption: "Trạng thái", visible: true },
       ],
       states: [
         { text: "Tất cả" },
@@ -135,13 +133,16 @@ export default {
     openFormRegisterOvertime() {
       this.isShowFormRegisterOvertime = true;
     },
+    closeFormRegisterOvertime() {
+      this.isShowFormRegisterOvertime = false;
+    },
     addForm() {
       this.isAdding = true;
       this.isEditing = false;
       this.isShowFormRegisterOvertime = true;
     },
     deleteForm(id) {
-      registerOvertime.removeRegisterOvertime(id);
+      overtimeForm.removeRegisterOvertime(id);
       this.loadData();
     },
     getSelectedForm(obj) {
@@ -157,12 +158,9 @@ export default {
     },
     deleteCheckRows(rows) {
       for (var i = 0; i < rows.length; i++) {
-        registerOvertime.removeRegisterOvertime(rows[i]);
+        overtimeForm.removeRegisterOvertime(rows[i]);
       }
       this.loadData();
-    },
-    closeFormRegisterOvertime() {
-      this.isShowFormRegisterOvertime = false;
     },
     openFilterBox() {
       this.isShowFilterBox = !this.isShowFilterBox;
@@ -171,11 +169,12 @@ export default {
       this.isShowFilterBox = false;
     },
     loadData() {
-      this.registerOvertime = registerOvertime.getRegisterOvertime();
+      this.registerOvertime = overtimeForm.getRegisterOvertime();
     },
   },
   created() {
     this.loadData();
+    console.log("registerOvertimeform", this.registerOvertime);
   },
 };
 </script>

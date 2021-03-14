@@ -29,14 +29,14 @@ namespace MISA.CukCuk.Api.Controllers
         public IActionResult Insert(MISAEnity enity)
         {
             var serviceResult = _baseService.Insert(enity);
-            return StatusCode(serviceResult.MISACode, serviceResult);
+            return Ok(serviceResult);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(string id, MISAEnity enity)
         {
             var serviceResult = _baseService.Update(id, enity);
-            return StatusCode(serviceResult.MISACode, serviceResult);
+            return Ok(serviceResult);
 
         }
 
@@ -44,7 +44,7 @@ namespace MISA.CukCuk.Api.Controllers
         public IActionResult Delete(string id)
         {
             var serviceResult = _baseService.Delete(id);
-            return StatusCode(serviceResult.MISACode, serviceResult);
+            return Ok(serviceResult);
         }
     }
 }

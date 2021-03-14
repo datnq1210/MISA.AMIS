@@ -2,7 +2,8 @@
   <div class="grid">
     <div class="grid-table">
       <DxDataGrid
-        :data-source="data"
+        :data-source="tableName"
+        :key-expr="primaryKey"
         :onContentReady="onContentReady"
         :allow-column-reordering="true"
         :allow-column-resizing="true"
@@ -39,10 +40,10 @@
         </template>
 
         <DxColumn
-          v-for="item in columns"
+          v-for="(item, index) in columns"
           :data-field="item.datafield"
           :caption="item.caption"
-          :key="item.Id"
+          :key="index"
           :min-width="minWidth"
           :visible="item.visible"
           :allow-sorting="false"
@@ -99,7 +100,7 @@
         class="btn-dialog-delete"
         @click="
           () => {
-            this.$emit('deleteOnClick', this.selectedRow.Id);
+            this.$emit('deleteOnClick', this.selectedRow.overtimeId);
             this.$refs.confirmDeleteDialog.close();
           }
         "
@@ -150,9 +151,13 @@ export default {
     DxScrolling,
   },
   props: {
-    data: {
+    tableName: {
       type: Array,
       default: () => [],
+    },
+    primaryKey:{
+      type: String,
+      default: null
     },
     columns: {
       type: Array,
@@ -169,9 +174,7 @@ export default {
   },
   computed: {
     recordTotal() {
-      var count = this.data.length;
-      if (count < 10 && count > 0) return "0" + count;
-      return count;
+      return 0;
     },
   },
   data() {
@@ -188,10 +191,6 @@ export default {
   methods: {
     getSelectedRow(e) {
       this.selectedRow = e.data;
-      // if (this.isDeleting) {
-      //   this.$emit("deleteOnClick", this.selectedRow.Id);
-      //   this.isDeleting = false;
-      // }
       if (this.isEditing) {
         this.$emit("editOnClick", this.selectedRow);
         this.isEditing = false;
@@ -205,7 +204,6 @@ export default {
     },
     deleteRow() {
       this.$refs.confirmDeleteDialog.open();
-      // this.isDeleting = true;
     },
     editRow() {
       this.isEditing = true;

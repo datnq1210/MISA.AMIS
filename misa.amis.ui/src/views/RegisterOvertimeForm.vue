@@ -21,14 +21,16 @@
               >
               <DxSelectBox
                 class="ms-combobox"
-                :items="applicants"
+                :data-source="applicants"
+                :value="applicants[0].applicantId"
+                display-expr="applicantName"
+                value-expr="applicantId"
                 :search-enabled="true"
-                placeholder=""
-                v-model="newForm.applicant"
+                v-model="newForm.applicantId"
                 :noDataText="noDataMsg"
                 :class="{ notValid: !applicantsCheck.valid }"
                 :onValueChanged="
-                  () => (applicantsCheck.valid = newForm.applicant)
+                  () => (applicantsCheck.valid = newForm.applicantId)
                 "
               >
               </DxSelectBox>
@@ -84,7 +86,7 @@
                 v-model="newForm.dateWorkStart"
                 type="datetime"
                 format="DD/MM/YYYY HH:mm"
-                value-type="YYYY-MM-DD HH:mm:ss"
+                value-type="YYYY-MM-DDTHH:mm:ss"
                 placeholder="DD/MM/YYYY HH:mm"
                 :show-time-panel="showTimePanel"
                 @close="handleOpenChange"
@@ -110,7 +112,7 @@
               <date-picker
                 :lang="lang"
                 placeholder="DD/MM/YYYY HH:mm"
-                value-type="YYYY-MM-DD HH:mm:ss"
+                value-type="YYYY-MM-DDTHH:mm:ss"
                 v-model="newForm.dateWorkEnd"
                 type="datetime"
                 format="DD/MM/YYYY HH:mm"
@@ -160,15 +162,18 @@
             <div class="ms-row">
               <label>Người duyệt <span class="label-require">*</span></label>
               <DxSelectBox
-                :items="approvedBy"
+                :data-source="approvers"
+                :value="approvers[0].approverId"
+                display-expr="approverName"
+                value-expr="approverId"
                 :search-enabled="true"
                 placeholder=""
                 class="ms-combobox"
-                v-model="newForm.approvedBy"
+                v-model="newForm.approverId"
                 :noDataText="noDataMsg"
                 :class="{ notValid: !approvedByCheck.valid }"
                 :onValueChanged="
-                  () => (approvedByCheck.valid = newForm.approvedBy)
+                  () => (approvedByCheck.valid = newForm.approverId)
                 "
               />
               <ms-tooltip
@@ -196,9 +201,9 @@
                 :placeholder="null"
                 :noDataText="noDataMsg"
                 :items="states"
-                v-model="newForm.status"
+                v-model="newForm.state"
                 :class="{ notValid: !statusCheck.valid }"
-                :onValueChanged="() => (statusCheck.valid = newForm.status)"
+                :onValueChanged="() => (statusCheck.valid = newForm.state)"
               />
               <ms-tooltip
                 v-if="!statusCheck.valid"
@@ -290,13 +295,9 @@ import DatePicker from "vue2-datepicker";
 import moment from "moment";
 import "vue2-datepicker/locale/vi";
 import "vue2-datepicker/index.css";
-
-import registerOvertime from "@/service/registerOvertime.service.js";
-import employService from "@/service/employs.service.js";
-import employeeService from "@/service/employees.service.js";
-
-var employs = employService.getEmploy();
-var employees = employeeService.getEmployees();
+import registerOvertime from "@/service/overtime.service.js";
+import approverService from "@/service/approver.service.js";
+import applicantService from "@/service/applicant.service.js";
 
 export default {
   name: "register-overtime-form",
@@ -308,15 +309,11 @@ export default {
     noDataMsg() {
       return "Không có dữ liệu!";
     },
-    approvedBy() {
-      return employs.map(function(employs) {
-        return employs.name;
-      });
+    approvers() {
+      return approverService.getApprover();
     },
     applicants() {
-      return employees.map(function(employees) {
-        return employees.name;
-      });
+      return applicantService.getApplicant();
     },
     isChangeValue() {
       return JSON.stringify(this.newFormCache) != JSON.stringify(this.newForm);
@@ -325,15 +322,14 @@ export default {
   data() {
     return {
       newForm: {
-        Id: "",
-        applicant: "",
         dateCreate: moment(Date.now()).format("YYYY-MM-DD"),
-        dateWorkStart: "",
-        dateWorkEnd: "",
-        reasonOvertime: "",
-        approvedBy: "",
-        note: "",
-        status: "",
+        dateWorkStart: null,
+        dateWorkEnd: null,
+        reasonOvertime: null,
+        note: null,
+        state: null,
+        applicantId: null,
+        approverId: null,
       },
       newFormCache: { ...this.newForm },
       applicantsCheck: {
@@ -380,15 +376,15 @@ export default {
     selectedForm: {
       type: Object,
       default: () => ({
-        Id: null,
-        applicant: null,
+        overtimeId: null,
         dateCreate: null,
         dateWorkStart: null,
         dateWorkEnd: null,
         reasonOvertime: null,
-        approvedBy: null,
         note: null,
-        status: null,
+        state: null,
+        applicantId: null,
+        approverId: null,
       }),
     },
     isEditing: {
@@ -418,11 +414,15 @@ export default {
       if (this.checkValidate()) {
         if (this.isAdding) {
           registerOvertime.addRegisterOvertime(this.newForm);
+          this.$emit("loadData");
           this.$emit("closeFormRegisterOvertime");
+          console.log('newform on add',this.newForm)
           return;
         } else if (this.isEditing) {
           registerOvertime.updateRegisterOvertime(this.newForm);
+          this.$emit("loadData");
           this.$emit("closeFormRegisterOvertime");
+          console.log('newform on edit',this.newForm)
           return;
         }
       }
@@ -434,9 +434,9 @@ export default {
       this.showTimePanel = false;
     },
     checkValidate() {
-      this.applicantsCheck.valid = this.newForm.applicant;
-      this.approvedByCheck.valid = this.newForm.approvedBy;
-      this.statusCheck.valid = this.newForm.status;
+      this.applicantsCheck.valid = this.newForm.applicantId;
+      this.approvedByCheck.valid = this.newForm.approverId;
+      this.statusCheck.valid = this.newForm.state;
       this.reasonOvertimeCheck.valid = this.newForm.reasonOvertime;
       this.dateCreateCheck.valid = this.newForm.dateCreate;
       this.dateWorkStartCheck.valid = this.newForm.dateWorkStart;
@@ -463,9 +463,9 @@ export default {
       }
 
       return (
-        this.newForm.applicant &&
-        this.newForm.approvedBy &&
-        this.newForm.status &&
+        this.newForm.applicantId &&
+        this.newForm.approverId &&
+        this.newForm.state &&
         this.newForm.reasonOvertime &&
         this.newForm.dateCreate &&
         this.newForm.dateWorkStart &&
@@ -476,6 +476,9 @@ export default {
     },
     checkDateWorkStart() {
       this.dateWorkStartCheck.valid = this.newForm.dateWorkStart;
+      if (!this.dateWorkStartCheck.valid) {
+        this.dateWorkStartCheck.errMsg = "Làm thêm từ không được để trống.";
+      }
       console.log("Ngày bắt đầu: ", this.newForm.dateWorkStart);
       console.log("Ngày kết thúc: ", this.newForm.dateWorkEnd);
       console.log(
@@ -484,7 +487,7 @@ export default {
       if (
         this.newForm.dateWorkStart &&
         this.newForm.dateWorkEnd &&
-        this.newForm.dateWorkStart > this.newForm.dateWorkEnd
+        this.newForm.dateWorkStart >= this.newForm.dateWorkEnd
       ) {
         this.dateWorkStartCheck.valid = false;
         this.dateWorkEndCheck.valid = true;
@@ -502,6 +505,9 @@ export default {
     },
     checkDateWorkEnd() {
       this.dateWorkEndCheck.valid = this.newForm.dateWorkEnd;
+      if (!this.dateWorkEndCheck.valid) {
+        this.dateWorkEndCheck.errMsg = "Làm thêm đến không được để trống.";
+      }
       console.log("Ngày bắt đầu: ", this.newForm.dateWorkStart);
       console.log("Ngày kết thúc: ", this.newForm.dateWorkEnd);
       console.log(
@@ -510,7 +516,7 @@ export default {
       if (
         this.newForm.dateWorkStart &&
         this.newForm.dateWorkEnd &&
-        this.newForm.dateWorkStart > this.newForm.dateWorkEnd
+        this.newForm.dateWorkStart >= this.newForm.dateWorkEnd
       ) {
         this.dateWorkEndCheck.valid = false;
         this.dateWorkStartCheck.valid = true;
@@ -529,8 +535,12 @@ export default {
   created() {
     if (this.isEditing) {
       this.newForm = { ...this.selectedForm };
+      console.log("NewForm:", this.newForm);
+      console.log("SelectedForm:", this.selectedForm);
     }
     this.newFormCache = { ...this.newForm };
+    console.log("NewForm:", this.newForm);
+    console.log("State:",this.newForm.state)
   },
 };
 </script>

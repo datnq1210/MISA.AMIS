@@ -36,6 +36,9 @@ namespace MISA.CukCuk.Api
             //Cấu hình Dl
             services.AddScoped(typeof(IDbContext<>), typeof(DbContext<>));
             services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
+            services.AddScoped<IApplicantService,ApplicantService>();
+            services.AddScoped<IApproverService,ApproverService>();
+            services.AddScoped<IOvertimeFormService, OvertimeFormService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MISA.AMIS.Api", Version = "v1" });
@@ -62,6 +65,7 @@ namespace MISA.CukCuk.Api
                 var serviceResult = new ServiceResult();
                 serviceResult.devMsg = exception.Message;
                 serviceResult.userMsg = MISA.Common.Properties.Resources.UserMsg_Exception;
+                serviceResult.MISACode = (int)MISACode.ServerError;
                 await context.Response.WriteAsJsonAsync(serviceResult);
             }));
             app.UseRouting();

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MySqlConnector;
 using System.Collections.Generic;
 using System.Data;
 using Dapper;
 using MISA.Common.Interfaces;
+using MySqlConnector;
 
 namespace MISA.DAL
 {
@@ -19,7 +19,7 @@ namespace MISA.DAL
         public DbContext(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("MISAeShopConnection");
+            _connectionString = _configuration.GetConnectionString("MISALocalConnection");
             _dbConnection = new MySqlConnection(_connectionString);
         }
         #endregion
