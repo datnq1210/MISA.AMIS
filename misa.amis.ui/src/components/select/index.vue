@@ -1,5 +1,5 @@
 <template>
-  <div class="ms-select ms-flex">
+  <div class="ms-select ms-flex" :value="selectedItem">
     <div class="selectedItem ms-flex" :id="id" @click="isShow = !isShow">
       {{ selectedItem }}
       <div v-if="!iconLagre" class="mi-chevron-small ml-2"></div>
@@ -26,7 +26,6 @@
 </template>
 
 <script>
-// import { DxSelectBox } from 'devextreme-vue/select-box';
 export default {
   name: "ms-select",
   components: {},
@@ -41,10 +40,10 @@ export default {
       type: Boolean,
       default: false,
     },
-    id:{
+    id: {
       type: String,
-      require: true
-    }
+      require: true,
+    },
   },
   created() {
     window.addEventListener("click", this.checkClickOn);
@@ -62,6 +61,7 @@ export default {
     selectItem(value) {
       this.selectedItem = value;
       this.isShow = false;
+      this.$emit("getLimit", value);
     },
     checkClickOn(event) {
       if (!document.getElementById(this.id).contains(event.target)) {

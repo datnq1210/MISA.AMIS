@@ -2,7 +2,7 @@
   <div class="grid">
     <div class="grid-table">
       <DxDataGrid
-        :data-source="tableName"
+        :data-source="displayData"
         :onContentReady="onContentReady"
         :allow-column-reordering="true"
         :allow-column-resizing="true"
@@ -51,7 +51,7 @@
 
         <template #custom-cell="{data}">
           <slot :name="data.column.dataField" :data="data">
-            <div>{{data.value}}</div>
+            <div>{{ data.value }}</div>
           </slot>
         </template>
 
@@ -81,18 +81,18 @@
         <ms-select
           :id="'paging'"
           class="pagingOption"
-          :data="pages"
+          :data="pageLimit"
           :width="'100'"
           :iconLagre="true"
+          @getLimit="getLimit"
         ></ms-select>
         <div class="mx-6">
-          Từ <b>{{ recordTotal ? "01" : "0" }}</b> đến
-          <b>{{ recordTotal }}</b> bản ghi
+          Từ <b>{{ from }}</b> đến <b>{{ to }}</b> bản ghi
         </div>
-        <button class="mr-2">
+        <button class="mr-2" @click="prevPage">
           <div class="icon-prev-page mr-6"></div>
         </button>
-        <button class="ml-2">
+        <button class="ml-2" @click="nextPage">
           <div class="icon-next-page"></div>
         </button>
       </div>
@@ -159,10 +159,11 @@ export default {
   props: {
     tableName: {
       type: Array,
+      default: () => [],
     },
-    primaryKey:{
+    primaryKey: {
       type: String,
-      default: null
+      default: null,
     },
     columns: {
       type: Array,
@@ -179,7 +180,27 @@ export default {
   },
   computed: {
     recordTotal() {
-      return 0;
+      var recordTotal = this.tableName.length;
+      if (recordTotal > 0 && recordTotal < 10) return "0" + recordTotal;
+      return recordTotal;
+    },
+    displayData() {
+      return this.pagiagte(this.tableName);
+    },
+    from() {
+      var from = this.page.limit * this.pageNumber - this.page.limit + 1;
+      if (this.tableName.length == 0) return 0;
+      if (from < 10 && from > 0) return "0" + from;
+      return from;
+    },
+    to() {
+      var to = this.page.limit * this.pageNumber;
+      if (to > this.tableName.length) to = this.tableName.length;
+      if (to < 10 && to > 0) return "0" + to;
+      return to;
+    },
+    maxPage() {
+      return Math.ceil(this.tableName.length / this.page.limit);
     },
   },
   data() {
@@ -187,13 +208,42 @@ export default {
       isShowAdjustColumn: false,
       defaultVisible: false,
       selectedRow: {},
+      pageNumber: 1,
+      page: {
+        limit: 15,
+        offset: 0,
+      },
       isEditing: false,
       isDeleting: false,
-      pages: [{ value: 15 }, { value: 25 }, { value: 50 }, { value: 100 }],
+      pageLimit: [{ value: 15 }, { value: 25 }, { value: 50 }, { value: 100 }],
       headers: JSON.parse(JSON.stringify(this.columns)),
     };
   },
   methods: {
+    getLimit(limit) {
+      this.page.limit = limit;
+    },
+    pagiagte(arr) {
+      let page = this.pageNumber;
+      let perPage = this.page.limit;
+      let from = page * perPage - perPage;
+      let to = page * perPage;
+      return arr.slice(from, to);
+    },
+    nextPage() {
+      if (this.pageNumber == this.maxPage) {
+        this.pageNumber = 1;
+        return;
+      }
+      this.pageNumber++;
+    },
+    prevPage() {
+      if (this.pageNumber == 1) {
+        this.pageNumber = this.maxPage;
+        return;
+      }
+      this.pageNumber--;
+    },
     getSelectedRow(e) {
       this.selectedRow = e.data;
       if (this.isEditing) {
@@ -222,9 +272,10 @@ export default {
       const allSelectedRowKeys = e.selectedRowKeys;
       const allSelectedRowsData = e.selectedRowsData;
       console.log(currentSelectedRowKeys);
-      console.log(currentDeselectedRowKeys);
+      console.log("row key", currentDeselectedRowKeys);
       console.log(allSelectedRowKeys.length);
-      console.log(allSelectedRowsData);
+      console.log("all data", allSelectedRowsData);
+      this.$emit("getListData", allSelectedRowsData);
       if (allSelectedRowKeys.length > 0)
         this.$emit("onCheckRow", true, allSelectedRowKeys.length);
       else if (allSelectedRowKeys.length <= 0) this.$emit("onCheckRow", false);
@@ -252,6 +303,7 @@ export default {
   },
   created() {
     window.addEventListener("click", this.checkClickOn);
+    console.log("table", this.tableName);
   },
   beforeDestroy() {
     window.removeEventListener("click", this.checkClickOn);

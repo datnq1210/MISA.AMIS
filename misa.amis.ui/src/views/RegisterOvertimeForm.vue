@@ -20,6 +20,7 @@
                 >Người nộp đơn <span class="label-require">*</span></label
               >
               <DxSelectBox
+                ref="autoFocus"
                 class="ms-combobox"
                 placeholder=""
                 :data-source="applicants"
@@ -388,6 +389,10 @@ export default {
         approverId: null,
       }),
     },
+    page: {
+      type: Object,
+      default: null,
+    },
     isEditing: {
       type: Boolean,
       default: false,
@@ -484,11 +489,6 @@ export default {
       if (!this.dateWorkStartCheck.valid) {
         this.dateWorkStartCheck.errMsg = "Làm thêm từ không được để trống.";
       }
-      console.log("Ngày bắt đầu: ", this.newForm.dateWorkStart);
-      console.log("Ngày kết thúc: ", this.newForm.dateWorkEnd);
-      console.log(
-        this.newForm.dateWorkStart > new Date(this.newForm.dateWorkEnd)
-      );
       if (
         this.newForm.dateWorkStart &&
         this.newForm.dateWorkEnd &&
@@ -513,11 +513,6 @@ export default {
       if (!this.dateWorkEndCheck.valid) {
         this.dateWorkEndCheck.errMsg = "Làm thêm đến không được để trống.";
       }
-      console.log("Ngày bắt đầu: ", this.newForm.dateWorkStart);
-      console.log("Ngày kết thúc: ", this.newForm.dateWorkEnd);
-      console.log(
-        this.newForm.dateWorkStart > new Date(this.newForm.dateWorkEnd)
-      );
       if (
         this.newForm.dateWorkStart &&
         this.newForm.dateWorkEnd &&
@@ -546,6 +541,9 @@ export default {
     this.newFormCache = { ...this.newForm };
     console.log("NewForm:", this.newForm);
     console.log("State:", this.newForm.state);
+  },
+  mounted() {
+    this.$refs["autoFocus"].instance.focus();
   },
 };
 </script>

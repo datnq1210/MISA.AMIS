@@ -29,7 +29,11 @@
       </button>
       <button
         class="btn-delete-mutilple ms-button ms-flex ml-4 pl-3 pr-4"
-        @click="deleteCheckRows"
+        @click="
+          () => {
+            this.$refs.confirmDeleteDialog.open();
+          }
+        "
       >
         <div class="icon-delete mr-1"></div>
         <div>Xóa</div>
@@ -46,14 +50,16 @@
         @deleteOnClick="deleteForm"
         @editOnClick="getSelectedForm"
         @onCheckRow="onCheckRow"
+        @loadData="loadData"
+        @getListData="getListData"
         ref="GridTb"
       >
         <template v-slot:dateCreate="{ data }">
           {{ dateFormat(data.value) }}
         </template>
 
-        <template v-slot:workTime="{ data }" >
-          <div style="text-align: center;">
+        <template v-slot:workTime="{ data }">
+          <div style="text-align: left;">
             {{ data.value }}
           </div>
         </template>
@@ -66,10 +72,30 @@
         :selectedForm="selectedForm"
         :isEditing="isEditing"
         :isAdding="isAdding"
+        :page="page"
         @loadData="loadData"
         :showPopup.sync="isShowFormRegisterOvertime"
       />
     </transition>
+    <ms-dialog
+      :dialogHeader="'Xóa đơn xin làm thêm'"
+      :dialogMsg="'Bạn có chắc chắn muốn xóa những Đơn xin làm thêm này không?'"
+      ref="confirmDeleteDialog"
+    >
+      <button class="btn-dialog-delete" @click="deleteMulForm">
+        Xóa
+      </button>
+      <button
+        class="btn-dialog-cancel ms-button mr-2 ms-button ms-button-secondary bg-hover-secondary bg-active-secondary"
+        @click="
+          () => {
+            this.$refs.confirmDeleteDialog.close();
+          }
+        "
+      >
+        Hủy
+      </button>
+    </ms-dialog>
   </div>
 </template>
 
@@ -78,7 +104,6 @@ import "devextreme/dist/css/dx.common.css";
 import "devextreme/dist/css/dx.light.css";
 import moment from "moment";
 import axios from "axios";
-import overtimeForm from "@/service/overtime.service.js";
 
 export default {
   name: "register-overtime",
@@ -89,7 +114,8 @@ export default {
       isShowFilterBox: false,
       isCheckedRow: false,
       rowCheckCount: 0,
-      registerOvertime: null,
+      registerOvertime: [],
+      listForm: [],
       selectedForm: {
         overtimeId: null,
         dateCreate: null,
@@ -156,8 +182,23 @@ export default {
       this.isEditing = false;
       this.isShowFormRegisterOvertime = true;
     },
+    getListData(val) {
+      console.log("getlistdata", val);
+      this.listForm = val;
+      console.log("listForm", this.listForm);
+    },
     deleteForm(id) {
-      overtimeForm.removeRegisterOvertime(id, this.loadData);
+      axios
+        .delete("http://localhost:52698/api/v1/OvertimeForms/" + id)
+        .then(() => {
+          this.loadData();
+        });
+    },
+    deleteMulForm() {
+      this.listForm.forEach((element) => {
+        this.deleteForm(element.overtimeId);
+      });
+      this.$refs.confirmDeleteDialog.close();
     },
     getSelectedForm(obj) {
       console.log("editing");
@@ -170,12 +211,6 @@ export default {
       this.isCheckedRow = isCheck;
       this.rowCheckCount = count;
     },
-    deleteCheckRows(rows) {
-      for (var i = 0; i < rows.length; i++) {
-        overtimeForm.removeRegisterOvertime(rows[i]);
-      }
-      this.loadData();
-    },
     openFilterBox() {
       this.isShowFilterBox = !this.isShowFilterBox;
     },
@@ -183,18 +218,12 @@ export default {
       this.isShowFilterBox = false;
     },
     async loadData() {
-      console.log(
-        axios
-          .get("http://localhost:52698/api/v1/OvertimeForms")
-          .then((res) => res.data)
-      );
       let res = await axios.get("http://localhost:52698/api/v1/OvertimeForms");
-      console.log(res.data);
       this.registerOvertime = res.data;
       this.closeFormRegisterOvertime();
     },
   },
-  created() {
+  async created() {
     this.loadData();
     console.log("registerOvertimeform", this.registerOvertime);
   },
