@@ -10,14 +10,14 @@
         class="option__text"
         v-for="(item, index) in data"
         :key="index"
-        :class="{ isSelected: item.text == selectedItem }"
-        @click="selectItem(item.text)"
+        :class="{ isSelected: item.value == selectedItem }"
+        @click="selectItem(item.value)"
       >
         <div>
-          {{ item.text }}
+          {{ item.value }}
         </div>
         <div
-          v-if="item.text == selectedItem && iconLagre"
+          v-if="item.value == selectedItem && iconLagre"
           class="icon-check"
         ></div>
       </div>
@@ -54,7 +54,7 @@ export default {
   },
   data() {
     return {
-      selectedItem: this.data[0].text,
+      selectedItem: this.data[0].value,
       isShow: false,
     };
   },

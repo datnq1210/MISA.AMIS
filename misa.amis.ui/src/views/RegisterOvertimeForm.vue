@@ -21,6 +21,7 @@
               >
               <DxSelectBox
                 class="ms-combobox"
+                placeholder=""
                 :data-source="applicants"
                 :value="applicants[0].applicantId"
                 display-expr="applicantName"
@@ -264,7 +265,7 @@
           @click="
             () => {
               this.$refs.msDialog.close();
-              this.$emit('closeFormRegisterOvertime');
+              this.$emit('update:showPopup', false);
             }
           "
         >
@@ -401,7 +402,9 @@ export default {
       if (this.isChangeValue) {
         this.$refs.msDialog.open();
         return;
-      } else this.$emit("closeFormRegisterOvertime");
+      } else {
+        this.$emit("update:showPopup", false);
+      }
     },
     closeFormEmployee() {
       this.isShowFormEmployee = false;
@@ -409,20 +412,22 @@ export default {
     openFormEmployee() {
       this.isShowFormEmployee = true;
     },
+    loadDataForm() {
+      this.$emit("loadData");
+    },
     saveOnClick() {
       this.checkValidate();
       if (this.checkValidate()) {
         if (this.isAdding) {
-          registerOvertime.addRegisterOvertime(this.newForm);
-          this.$emit("loadData");
-          this.$emit("closeFormRegisterOvertime");
-          console.log('newform on add',this.newForm)
+          registerOvertime.addRegisterOvertime(this.newForm, this.loadDataForm);
+          console.log("newform on add", this.newForm);
           return;
         } else if (this.isEditing) {
-          registerOvertime.updateRegisterOvertime(this.newForm);
-          this.$emit("loadData");
-          this.$emit("closeFormRegisterOvertime");
-          console.log('newform on edit',this.newForm)
+          registerOvertime.updateRegisterOvertime(
+            this.newForm,
+            this.loadDataForm
+          );
+          console.log("newform on edit", this.newForm);
           return;
         }
       }
@@ -540,7 +545,7 @@ export default {
     }
     this.newFormCache = { ...this.newForm };
     console.log("NewForm:", this.newForm);
-    console.log("State:",this.newForm.state)
+    console.log("State:", this.newForm.state);
   },
 };
 </script>

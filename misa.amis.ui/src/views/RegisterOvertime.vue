@@ -24,7 +24,7 @@
       <span
         >Đã chọn <b>{{ rowCheckCount }}</b></span
       >
-      <button class="btn-deselect ms-button ml-4" @click="onRemove">
+      <button class="btn-deselect ms-button ml-4" @click="deSelect">
         Bỏ chọn
       </button>
       <button
@@ -39,7 +39,6 @@
     <div class="register-overtime-content">
       <ms-grid
         :tableName="registerOvertime"
-        :primaryKey="'overtimeId'"
         :columns="columns"
         :adjustColumn="true"
         :minWidth="0"
@@ -48,7 +47,17 @@
         @editOnClick="getSelectedForm"
         @onCheckRow="onCheckRow"
         ref="GridTb"
-      />
+      >
+        <template v-slot:dateCreate="{ data }">
+          {{ dateFormat(data.value) }}
+        </template>
+
+        <template v-slot:workTime="{ data }" >
+          <div style="text-align: center;">
+            {{ data.value }}
+          </div>
+        </template>
+      </ms-grid>
       <ms-filter v-show="isShowFilterBox" @closeFilterBox="closeFilterBox" />
     </div>
     <transition name="fade" appear>
@@ -57,7 +66,8 @@
         :selectedForm="selectedForm"
         :isEditing="isEditing"
         :isAdding="isAdding"
-        @closeFormRegisterOvertime="closeFormRegisterOvertime"
+        @loadData="loadData"
+        :showPopup.sync="isShowFormRegisterOvertime"
       />
     </transition>
   </div>
@@ -66,6 +76,8 @@
 <script>
 import "devextreme/dist/css/dx.common.css";
 import "devextreme/dist/css/dx.light.css";
+import moment from "moment";
+import axios from "axios";
 import overtimeForm from "@/service/overtime.service.js";
 
 export default {
@@ -116,16 +128,19 @@ export default {
         { datafield: "state", caption: "Trạng thái", visible: true },
       ],
       states: [
-        { text: "Tất cả" },
-        { text: "Chờ duyệt" },
-        { text: "Đã duyệt" },
-        { text: "Từ chối" },
+        { value: "Tất cả" },
+        { value: "Chờ duyệt" },
+        { value: "Đã duyệt" },
+        { value: "Từ chối" },
       ],
     };
   },
   methods: {
-    onRemove() {
+    deSelect() {
       this.$refs.GridTb.clearAll();
+    },
+    dateFormat(date) {
+      return moment(date).format("DD-MM-YYYY");
     },
     updateHeader(val) {
       this.columns = JSON.parse(JSON.stringify(val));
@@ -142,8 +157,7 @@ export default {
       this.isShowFormRegisterOvertime = true;
     },
     deleteForm(id) {
-      overtimeForm.removeRegisterOvertime(id);
-      this.loadData();
+      overtimeForm.removeRegisterOvertime(id, this.loadData);
     },
     getSelectedForm(obj) {
       console.log("editing");
@@ -168,8 +182,16 @@ export default {
     closeFilterBox() {
       this.isShowFilterBox = false;
     },
-    loadData() {
-      this.registerOvertime = overtimeForm.getRegisterOvertime();
+    async loadData() {
+      console.log(
+        axios
+          .get("http://localhost:52698/api/v1/OvertimeForms")
+          .then((res) => res.data)
+      );
+      let res = await axios.get("http://localhost:52698/api/v1/OvertimeForms");
+      console.log(res.data);
+      this.registerOvertime = res.data;
+      this.closeFormRegisterOvertime();
     },
   },
   created() {

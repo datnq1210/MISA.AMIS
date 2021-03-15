@@ -3,7 +3,6 @@
     <div class="grid-table">
       <DxDataGrid
         :data-source="tableName"
-        :key-expr="primaryKey"
         :onContentReady="onContentReady"
         :allow-column-reordering="true"
         :allow-column-resizing="true"
@@ -47,7 +46,14 @@
           :min-width="minWidth"
           :visible="item.visible"
           :allow-sorting="false"
+          cell-template="custom-cell"
         />
+
+        <template #custom-cell="{data}">
+          <slot :name="data.column.dataField" :data="data">
+            <div>{{data.value}}</div>
+          </slot>
+        </template>
 
         <DxColumn
           caption=""
@@ -153,7 +159,6 @@ export default {
   props: {
     tableName: {
       type: Array,
-      default: () => [],
     },
     primaryKey:{
       type: String,
@@ -184,7 +189,7 @@ export default {
       selectedRow: {},
       isEditing: false,
       isDeleting: false,
-      pages: [{ text: "15" }, { text: "25" }, { text: "50" }, { text: "100" }],
+      pages: [{ value: 15 }, { value: 25 }, { value: 50 }, { value: 100 }],
       headers: JSON.parse(JSON.stringify(this.columns)),
     };
   },

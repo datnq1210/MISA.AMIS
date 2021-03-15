@@ -1,47 +1,34 @@
 import axios from "axios";
-// var data = axios
-//   .get("http://localhost:52698/api/v1/OvertimeForms")
-//   .then(function(response) {
-//     return response.data;
-//   });
-
-var data = [];
 
 export default {
-  getRegisterOvertime() {
-    data = [];
-    axios
-      .get("http://localhost:52698/api/v1/OvertimeForms")
-      .then(function(response) {
-        response.data.forEach((element) => {
-          data.push(element);
-        });
-      });
-    return data;
-  },
-  removeRegisterOvertime(id) {
+  removeRegisterOvertime(id, callback = null) {
     axios
       .delete("http://localhost:52698/api/v1/OvertimeForms/" + id)
-      .then((res) => {
-        console.log("delete", res);
+      .then(() => {
+        callback && callback();
       });
   },
-  addRegisterOvertime(obj) {
+  addRegisterOvertime(obj, callback = null) {
     console.log("Them du lieu:");
     console.log(obj);
     axios
       .post("http://localhost:52698/api/v1/OvertimeForms", obj)
       .then((res) => {
         console.log("post:", res.data);
+        callback && callback();
       })
       .catch(function(error) {
         console.log("error:", error.response.data);
       });
   },
-  updateRegisterOvertime(newObj) {
-    axios.put(
-      "http://localhost:52698/api/v1/OvertimeForms/" + newObj.overtimeId,
-      newObj
-    );
+  updateRegisterOvertime(newObj, callback = null) {
+    axios
+      .put(
+        "http://localhost:52698/api/v1/OvertimeForms/" + newObj.overtimeId,
+        newObj
+      )
+      .then(() => {
+        callback && callback();
+      });
   },
 };
