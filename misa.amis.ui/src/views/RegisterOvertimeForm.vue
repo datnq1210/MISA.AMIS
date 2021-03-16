@@ -356,11 +356,11 @@ export default {
       },
       reasonOvertimeCheck: {
         valid: true,
-        errMsg: "Lý do làm thêm không được để trống",
+        errMsg: "Lý do làm thêm không được để trống.",
       },
       statusCheck: {
         valid: true,
-        errMsg: "Trạng thái không được để trống",
+        errMsg: "Trạng thái không được để trống.",
       },
       states: ["Chờ duyệt", "Đã duyệt", "Từ chối"],
       lang: {
