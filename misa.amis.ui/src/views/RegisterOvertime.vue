@@ -168,31 +168,62 @@ export default {
     };
   },
   methods: {
+    /**
+     * Hàm bỏ chọn tất cả các dòng đang được chọn.
+     * CreatedBy: NQDAT
+     */
     deSelect() {
       this.$refs.GridTb.clearAll();
     },
+    /**
+     * Hàm chuyển định dạng ngày tháng
+     * CreatedBy: NQDAT
+     */
     dateFormat(date) {
       return moment(date).format("DD-MM-YYYY");
     },
+    /**
+     * Hàm cập nhật thông tin các cột trong bảng sau khi chỉnh sửa.
+     * CreatedBy: NQDAT
+     */
     updateHeader(val) {
       this.columns = JSON.parse(JSON.stringify(val));
     },
+    /**
+     * Hàm mở dialog thêm/sửa dữ liệu
+     * CreatedBy: NQDAT
+     */
     openFormRegisterOvertime() {
       this.isShowFormRegisterOvertime = true;
     },
+    /**
+     * Hàm đóng dialog thêm/sửa dữ liệu
+     * CreatedBy: NQDAT
+     */
     closeFormRegisterOvertime() {
       this.isShowFormRegisterOvertime = false;
     },
+    /**
+     * Hàm mở dialog thêm form
+     * CreatedBy: NQDAT
+     */
     addForm() {
       this.isAdding = true;
       this.isEditing = false;
       this.isShowFormRegisterOvertime = true;
     },
+    /**
+     * Hàm lấy thông tin các đơn đang được chọn.
+     * CreatedBy: NQDAT
+     */
     getListData(val) {
       console.log("getlistdata", val);
       this.listForm = val;
-      console.log("listForm", this.listForm);
     },
+    /**
+     * Hàm xóa một đơn đăng kí theo Id
+     * CreatedBy: NQDAT
+     */
     deleteForm(id) {
       axios
         .delete("http://localhost:52698/api/v1/OvertimeForms/" + id)
@@ -200,12 +231,20 @@ export default {
           this.loadData();
         });
     },
+    /**
+     * Hàm xóa đồng thời nhiều đơn đăng kí.
+     * CreatedBy: NQDAT
+     */
     deleteMulForm() {
       this.listForm.forEach((element) => {
         this.deleteForm(element.overtimeId);
       });
       this.$refs.confirmDeleteDialog.close();
     },
+    /**
+     * Hàm lấy thông tin của một đơn đăng ký khi nhấp chuột vào một dòng trên bảng.
+     * CreatedBy: NQDAT
+     */
     getSelectedForm(obj) {
       console.log("editing");
       this.isAdding = false;
@@ -213,16 +252,31 @@ export default {
       this.selectedForm = obj;
       this.isShowFormRegisterOvertime = true;
     },
+    /**
+     * Hàm kiểm tra các dòng đang được chọn
+     * isCheckedRow = true : có ít nhất một dòng đang được chọn.
+     * isCheckedRow = false: không có dòng nào đang được chọn.
+     * rowCheckCount: số dòng đang được chọn.
+     * CreatedBy: NQDAT
+     */
     onCheckRow(isCheck, count) {
       this.isCheckedRow = isCheck;
       this.rowCheckCount = count;
     },
+    /**
+     * Hàm mở bảng bộ lọc
+     * CreatedBy: NQDAT
+     */
     openFilterBox() {
       this.isShowFilterBox = !this.isShowFilterBox;
     },
     closeFilterBox() {
       this.isShowFilterBox = false;
     },
+    /**
+     * Hàm tìm kiếm theo tên
+     * CreatedBy: NQDAT
+     */
     searchByName(val) {
       this.searchValue = val;
       var searchResult = [];
@@ -247,6 +301,10 @@ export default {
         this.registerOvertime = searchResult;
       }, 10);
     },
+    /**
+     * Hàm lọc dữ liệu theo trạng thái
+     * CreatedBy: NQDAT
+     */
     filterByStatus(val) {
       var filterResult = [];
       this.loadData();
@@ -262,6 +320,10 @@ export default {
         this.registerOvertime = filterResult;
       }, 10);
     },
+    /**
+     * Hàm chuyển một chuỗi thành tiếng việt không dấu
+     * CreatedBy: NQDAT
+     */
     removeAccents(str) {
       var AccentsMap = [
         "aàảãáạăằẳẵắặâầẩẫấậ",
@@ -286,6 +348,10 @@ export default {
       }
       return str;
     },
+    /**
+     * Hàm nạp dữ liệu.
+     * CreatedBy: NQDAT
+     */
     async loadData() {
       let res = await axios.get("http://localhost:52698/api/v1/OvertimeForms");
       this.registerOvertime = res.data;

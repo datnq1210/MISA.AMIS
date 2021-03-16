@@ -403,6 +403,10 @@ export default {
     },
   },
   methods: {
+    /**
+     * Hàm đóng form đăng kí làm thêm giờ.
+     * CreatedBy: NQDAT
+     */
     closeFormRegisterOvertime() {
       if (this.isChangeValue) {
         this.$refs.msDialog.open();
@@ -411,15 +415,31 @@ export default {
         this.$emit("update:showPopup", false);
       }
     },
+    /**
+     * Hàm đóng form thêm nhân viên.
+     * CreatedBy: NQDAT
+     */
     closeFormEmployee() {
       this.isShowFormEmployee = false;
     },
+    /**
+     * Hàm mở form thêm nhân viên.
+     * CreatedBy: NQDAT
+     */
     openFormEmployee() {
       this.isShowFormEmployee = true;
     },
+    /**
+     * Hàm nạp lại dữ liệu sau khi thêm mới.
+     * CreatedBy: NQDAT
+     */
     loadDataForm() {
       this.$emit("loadData");
     },
+    /**
+     * Hàm lưu dữ liệu khi nhấp chuột vào nút [Lưu]
+     * CreatedBy: NQDAT
+     */
     saveOnClick() {
       this.checkValidate();
       if (this.checkValidate()) {
@@ -443,6 +463,10 @@ export default {
     handleOpenChange() {
       this.showTimePanel = false;
     },
+    /**
+     * Hàm kiểm tra dữ liệu khi ấn nút [Lưu]
+     * CreatedBy: NQDAT
+     */
     checkValidate() {
       this.applicantsCheck.valid = this.newForm.applicantId;
       this.approvedByCheck.valid = this.newForm.approverId;
@@ -484,6 +508,11 @@ export default {
         this.dateWorkStartCheck.valid
       );
     },
+    /**
+     * Hàm kiểm tra "Làm thêm từ"
+     * "Làm thêm từ phải" nhỏ hơn "Làm thêm đến"
+     * CreatedBy: NQDAT
+     */
     checkDateWorkStart() {
       this.dateWorkStartCheck.valid = this.newForm.dateWorkStart;
       if (!this.dateWorkStartCheck.valid) {
@@ -508,6 +537,11 @@ export default {
         this.dateWorkEndCheck.valid = true;
       }
     },
+    /**
+     * Hàm kiểm tra "Làm thêm đến"
+     * "Làm thêm đến" phải" lớn hơn "Làm thêm từ"
+     * CreatedBy: NQDAT
+     */
     checkDateWorkEnd() {
       this.dateWorkEndCheck.valid = this.newForm.dateWorkEnd;
       if (!this.dateWorkEndCheck.valid) {
