@@ -356,7 +356,7 @@ export default {
       },
       reasonOvertimeCheck: {
         valid: true,
-        errMsg: "Lý do làm thêm không được trống",
+        errMsg: "Lý do làm thêm không được để trống",
       },
       statusCheck: {
         valid: true,
