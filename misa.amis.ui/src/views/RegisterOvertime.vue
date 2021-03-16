@@ -217,7 +217,6 @@ export default {
      * CreatedBy: NQDAT
      */
     getListData(val) {
-      console.log("getlistdata", val);
       this.listForm = val;
     },
     /**
@@ -246,7 +245,6 @@ export default {
      * CreatedBy: NQDAT
      */
     getSelectedForm(obj) {
-      console.log("editing");
       this.isAdding = false;
       this.isEditing = true;
       this.selectedForm = obj;
@@ -292,7 +290,6 @@ export default {
             )
           ) {
             searchResult.push(element);
-            console.log("tên: ", element.applicantName);
           }
         });
         if (this.searchValue == "" || this.searchValue == null) {

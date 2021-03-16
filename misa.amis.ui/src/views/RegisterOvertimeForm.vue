@@ -445,14 +445,12 @@ export default {
       if (this.checkValidate()) {
         if (this.isAdding) {
           registerOvertime.addRegisterOvertime(this.newForm, this.loadDataForm);
-          console.log("newform on add", this.newForm);
           return;
         } else if (this.isEditing) {
           registerOvertime.updateRegisterOvertime(
             this.newForm,
             this.loadDataForm
           );
-          console.log("newform on edit", this.newForm);
           return;
         }
       }
@@ -569,12 +567,8 @@ export default {
   created() {
     if (this.isEditing) {
       this.newForm = { ...this.selectedForm };
-      console.log("NewForm:", this.newForm);
-      console.log("SelectedForm:", this.selectedForm);
     }
     this.newFormCache = { ...this.newForm };
-    console.log("NewForm:", this.newForm);
-    console.log("State:", this.newForm.state);
   },
   mounted() {
     this.$refs["autoFocus"].instance.focus();

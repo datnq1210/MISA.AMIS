@@ -303,7 +303,6 @@ export default {
   },
   created() {
     window.addEventListener("click", this.checkClickOn);
-    console.log("table", this.tableName);
   },
   beforeDestroy() {
     window.removeEventListener("click", this.checkClickOn);

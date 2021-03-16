@@ -93,7 +93,6 @@ export default {
       this.headersX = JSON.parse(JSON.stringify(this.headers));
     },
     handleInput(val) {
-      console.log("hi");
       this.searchValue = val;
     },
     removeAccents(str) {
