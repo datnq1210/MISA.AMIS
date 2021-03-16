@@ -180,7 +180,7 @@ export default {
      * CreatedBy: NQDAT
      */
     dateFormat(date) {
-      return moment(date).format("DD-MM-YYYY");
+      return moment(date).format("DD/MM/YYYY");
     },
     /**
      * Hàm cập nhật thông tin các cột trong bảng sau khi chỉnh sửa.
