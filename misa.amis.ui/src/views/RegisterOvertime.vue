@@ -11,7 +11,12 @@
         ></ms-select>
       </div>
       <v-spacer></v-spacer>
-      <ms-search-box :isIcon="true" style="width: 240px" class="mr-2" />
+      <ms-search-box
+        :isIcon="true"
+        style="width: 240px"
+        class="mr-2"
+        @changed="handleInput"
+      />
       <button class="btn-add ms-flex mr-2 pl-3 pr-4" @click="addForm">
         <div class="icon-add mr-1 my-2 ml-2"></div>
         <div>Thêm</div>
@@ -72,7 +77,6 @@
         :selectedForm="selectedForm"
         :isEditing="isEditing"
         :isAdding="isAdding"
-        :page="page"
         @loadData="loadData"
         :showPopup.sync="isShowFormRegisterOvertime"
       />
@@ -116,6 +120,7 @@ export default {
       rowCheckCount: 0,
       registerOvertime: [],
       listForm: [],
+      searchValue: "",
       selectedForm: {
         overtimeId: null,
         dateCreate: null,
@@ -217,6 +222,54 @@ export default {
     closeFilterBox() {
       this.isShowFilterBox = false;
     },
+    handleInput(val) {
+      this.searchValue = val;
+      var searchResult = [];
+      this.loadData();
+      setTimeout(() => {
+        this.registerOvertime.forEach((element) => {
+          if (
+            element.applicantName
+              .toLowerCase()
+              .includes(this.searchValue.toLowerCase()) ||
+            this.removeAccents(element.applicantName.toLowerCase()).includes(
+              this.searchValue.toLowerCase()
+            )
+          ) {
+            searchResult.push(element);
+            console.log("tên: ", element.applicantName);
+          }
+        });
+        if (this.searchValue == "" || this.searchValue == null) {
+          this.loadData();
+        }
+        this.registerOvertime = searchResult;
+      }, 10);
+    },
+    removeAccents(str) {
+      var AccentsMap = [
+        "aàảãáạăằẳẵắặâầẩẫấậ",
+        "AÀẢÃÁẠĂẰẲẴẮẶÂẦẨẪẤẬ",
+        "dđ",
+        "DĐ",
+        "eèẻẽéẹêềểễếệ",
+        "EÈẺẼÉẸÊỀỂỄẾỆ",
+        "iìỉĩíị",
+        "IÌỈĨÍỊ",
+        "oòỏõóọôồổỗốộơờởỡớợ",
+        "OÒỎÕÓỌÔỒỔỖỐỘƠỜỞỠỚỢ",
+        "uùủũúụưừửữứự",
+        "UÙỦŨÚỤƯỪỬỮỨỰ",
+        "yỳỷỹýỵ",
+        "YỲỶỸÝỴ",
+      ];
+      for (var i = 0; i < AccentsMap.length; i++) {
+        var re = new RegExp("[" + AccentsMap[i].substr(1) + "]", "g");
+        var char = AccentsMap[i][0];
+        str = str.replace(re, char);
+      }
+      return str;
+    },
     async loadData() {
       let res = await axios.get("http://localhost:52698/api/v1/OvertimeForms");
       this.registerOvertime = res.data;
@@ -225,7 +278,6 @@ export default {
   },
   async created() {
     this.loadData();
-    console.log("registerOvertimeform", this.registerOvertime);
   },
 };
 </script>
