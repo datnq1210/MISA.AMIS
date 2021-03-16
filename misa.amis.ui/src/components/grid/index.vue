@@ -84,7 +84,7 @@
           :data="pageLimit"
           :width="'100'"
           :iconLagre="true"
-          @getLimit="getLimit"
+          @getSelectValue="getLimit"
         ></ms-select>
         <div class="mx-6">
           Từ <b>{{ from }}</b> đến <b>{{ to }}</b> bản ghi

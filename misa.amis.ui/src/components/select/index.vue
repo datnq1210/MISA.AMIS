@@ -61,7 +61,7 @@ export default {
     selectItem(value) {
       this.selectedItem = value;
       this.isShow = false;
-      this.$emit("getLimit", value);
+      this.$emit("getSelectValue", value);
     },
     checkClickOn(event) {
       if (!document.getElementById(this.id).contains(event.target)) {

@@ -8,6 +8,7 @@
           :id="'filterState'"
           :data="states"
           :width="'135'"
+          @getSelectValue="filterByStatus"
         ></ms-select>
       </div>
       <v-spacer></v-spacer>
@@ -15,7 +16,7 @@
         :isIcon="true"
         style="width: 240px"
         class="mr-2"
-        @changed="handleInput"
+        @changed="searchByName"
       />
       <button class="btn-add ms-flex mr-2 pl-3 pr-4" @click="addForm">
         <div class="icon-add mr-1 my-2 ml-2"></div>
@@ -222,7 +223,7 @@ export default {
     closeFilterBox() {
       this.isShowFilterBox = false;
     },
-    handleInput(val) {
+    searchByName(val) {
       this.searchValue = val;
       var searchResult = [];
       this.loadData();
@@ -244,6 +245,21 @@ export default {
           this.loadData();
         }
         this.registerOvertime = searchResult;
+      }, 10);
+    },
+    filterByStatus(val) {
+      var filterResult = [];
+      this.loadData();
+      setTimeout(() => {
+        this.registerOvertime.forEach((element) => {
+          if ((element.state == val)) {
+            filterResult.push(element);
+          }
+        });
+        if (val == "Tất cả" || val == null) {
+          this.loadData();
+        }
+        this.registerOvertime = filterResult;
       }, 10);
     },
     removeAccents(str) {
