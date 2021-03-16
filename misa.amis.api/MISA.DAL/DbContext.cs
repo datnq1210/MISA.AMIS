@@ -25,9 +25,9 @@ namespace MISA.DAL
         #endregion
 
         #region Method
-        public IEnumerable<MISAEntity> Get(string sqlCommand, CommandType commandType)
+        public IEnumerable<MISAEntity> Get(string sqlCommand, DynamicParameters parameters, CommandType commandType)
         {
-            return _dbConnection.Query<MISAEntity>(sqlCommand, commandType: commandType);
+            return _dbConnection.Query<MISAEntity>(sqlCommand, parameters, commandType: commandType);
         }
 
         public int ExcuteNonQuery(string sqlCommand, DynamicParameters parameters, CommandType commandType)

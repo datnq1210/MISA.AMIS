@@ -13,7 +13,7 @@ namespace MISA.Common.Interfaces
         /// </summary>
         /// <returns>Danh sách các bản ghi</returns>
         /// CreatedBy: NQDAT (07/02/2021)
-        IEnumerable<MISAEntity> Get(string sqlCommand,CommandType commandType);
+        IEnumerable<MISAEntity> Get(string sqlCommand, DynamicParameters parameters, CommandType commandType);
 
         /// <summary>
         /// Thực thi một câu lệnh sql

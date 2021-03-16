@@ -14,9 +14,9 @@ namespace MISA.Common.Models
         {
             get
             {
-                return DateWorkStart.ToString("dd/MM/yyyy HH:mm")
-                    + "-"
-                    + DateWorkEnd.ToString("dd/MM/yyyy HH:mm");
+                return DateWorkStart.ToString("dd/MM/yyyy")
+                    + " - "
+                    + DateWorkEnd.ToString("dd/MM/yyyy");
             }
         }
         public string ReasonOvertime { get; set; }

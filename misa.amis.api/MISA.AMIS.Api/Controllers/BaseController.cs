@@ -41,10 +41,9 @@ namespace MISA.CukCuk.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(string Id)
         {
-            var serviceResult = _baseService.Delete(id);
-            return Ok(serviceResult);
+            return Ok(_baseService.Delete(Id));
         }
     }
 }

@@ -28,7 +28,7 @@ namespace MISA.BLL
         public IEnumerable<MISAEntity> Get()
         {
             var sqlCommand = $"Proc_Get{_tableName}";
-            return dbconnection.Get(sqlCommand, System.Data.CommandType.StoredProcedure);
+            return dbconnection.Get(sqlCommand, null, System.Data.CommandType.StoredProcedure);
         }
 
         public virtual ServiceResult Insert(MISAEntity entity)
@@ -56,7 +56,7 @@ namespace MISA.BLL
             return _serviceResult;
         }
 
-        public virtual ServiceResult Update(string entityId,MISAEntity entity)
+        public virtual ServiceResult Update(string entityId, MISAEntity entity)
         {
             var parameters = MappingData(entity);
             parameters.Add($"@{_tableName}Id", entityId);
@@ -142,7 +142,7 @@ namespace MISA.BLL
                     {
                         var errMsg = (dupliactedAttr as Duplicated).errorMsg;
                         var sqlCommand = $"SELECT {propertyName} FROM {_tableName} WHERE {propertyName} = '{propertyValue}'";
-                        var obj = dbconnection.Get(sqlCommand, System.Data.CommandType.Text).FirstOrDefault();
+                        var obj = dbconnection.Get(sqlCommand,null, System.Data.CommandType.Text).FirstOrDefault();
                         if (obj != null)
                         {
                             _serviceResult.userMsg += $"{errMsg} ";
