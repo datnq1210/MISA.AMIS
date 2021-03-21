@@ -566,7 +566,7 @@ export default {
   },
   created() {
     if (this.isEditing) {
-      this.newForm = { ...this.selectedForm };
+      this.newForm = { ...this.selectedForm};
     }
     this.newFormCache = { ...this.newForm };
   },
